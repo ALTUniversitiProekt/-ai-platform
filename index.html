@@ -3,203 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SABINA AI — Virtual AI Companion</title>
+    <title>SABINA AI — Універсалды ИИ Платформасы</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-main: linear-gradient(135deg, #0f172a, #1e1b4b, #31103f);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-pink: #ec4899;
+            --accent-blue: #6366f1;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background: var(--bg-main);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 15px;
         }
 
-        .chat-container {
+        .chat-app {
             width: 100%;
-            max-width: 480px;
-            height: 90vh;
-            background-color: #1e293b;
-            border-radius: 20px;
+            max-width: 600px;
+            height: 92vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-            border: 1px solid #334155;
         }
 
+        /* Header */
         .chat-header {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
             padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
+        .avatar-box {
+            position: relative;
+        }
+
         .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #6366f1;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
         }
 
-        .user-info h2 {
+        .online-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #10b981;
+            border: 2px solid #0f172a;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+        }
+
+        .brand-text h1 {
             font-size: 1.1rem;
-            color: #ffffff;
+            font-weight: 700;
         }
 
-        .user-info p {
+        .brand-text p {
+            font-size: 0.78rem;
+            color: var(--accent-pink);
+            font-weight: 500;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-controls select, .mode-btn {
+            background: #0f172a;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 10px;
+            border-radius: 10px;
             font-size: 0.8rem;
-            color: #e0e7ff;
+            outline: none;
+            cursor: pointer;
         }
 
-        .chat-messages {
+        .mode-btn {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+            border-color: rgba(236, 72, 153, 0.4);
+            font-weight: 600;
+        }
+
+        /* Chat Body */
+        .chat-body {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .bot-message {
-            background-color: #334155;
-            color: #f8fafc;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .user-message {
-            background-color: #6366f1;
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .chat-input-area {
-            padding: 15px;
-            background-color: #0f172a;
+        .msg-row {
             display: flex;
             gap: 10px;
+            max-width: 85%;
         }
 
-        input {
-            flex: 1;
+        .msg-row.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .bubble {
             padding: 12px 16px;
-            border-radius: 25px;
-            border: 1px solid #334155;
-            background-color: #1e293b;
-            color: #fff;
-            outline: none;
-            font-size: 0.95rem;
+            border-radius: 18px;
+            font-size: 0.92rem;
+            line-height: 1.45;
         }
 
-        input:focus {
-            border-color: #6366f1;
+        .bot .bubble {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom-left-radius: 4px;
         }
 
-        button {
-            background-color: #6366f1;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
+        .user .bubble {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+            border-bottom-right-radius: 4px;
+        }
+
+        .time {
+            font-size: 0.65rem;
+            color: var(--text-sub);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Quick Chips */
+        .quick-chips {
+            display: flex;
+            gap: 8px;
+            padding: 10px 16px;
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            white-space: nowrap;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
+            transition: 0.2s;
         }
 
-        button:hover {
-            background-color: #4f46e5;
+        .chip:hover {
+            background: var(--accent-pink);
+            color: white;
+        }
+
+        /* Footer */
+        .chat-footer {
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 4px 8px;
+        }
+
+        .input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 10px;
+            font-size: 0.92rem;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover { color: white; }
+
+        .icon-btn.mic-active {
+            color: #ef4444;
+            animation: pulse 1.2s infinite;
+        }
+
+        .send-btn {
+            background: var(--accent-pink);
+            color: white;
+        }
+
+        .send-btn:hover { background: #db2777; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
+<div class="chat-app">
+    <!-- Шапка -->
     <div class="chat-header">
-        <div class="avatar">S</div>
-        <div class="user-info">
-            <h2>Sabina AI 🚀</h2>
-            <p>Виртуалды AI Серік</p>
+        <div class="brand-info">
+            <div class="avatar-box">
+                <div class="avatar" id="avatarIcon"><i class="fa-solid fa-heart"></i></div>
+                <div class="online-dot"></div>
+            </div>
+            <div class="brand-text">
+                <h1>SABINA AI</h1>
+                <p id="modeStatus">💖 AI Серік & Танысу</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="mode-btn" onclick="toggleMode()" id="modeBtn">🏛️ Мем. Режим</button>
+            <select id="langSelect" onchange="changeLang()">
+                <option value="kk">ҚАЗ</option>
+                <option value="ru">РУС</option>
+                <option value="en">ENG</option>
+            </select>
         </div>
     </div>
 
-    <div class="chat-messages" id="chatBox">
-        <div class="message bot-message">
-            Сәлем! Мен Sabina AI виртуалды серігіңмін. Саған қалай көмектесе аламын?
+    <!-- Чат аймағы -->
+    <div class="chat-body" id="chatBody">
+        <div class="msg-row bot">
+            <div class="bubble" id="welcomeMsg">
+                Сәлем! Мен **Sabina AI**-мын. Қыздармен еркін сөйлесуді үйрену, сөз бастау, комплимент айту немесе психологиялық кеңес алу үшін маған жаза бер! Сондай-ақ жоғарғы батырмамен Мемлекеттік бағдарламалар режиміне де ауыса аласың.
+                <span class="time" id="initTime"></span>
+            </div>
         </div>
     </div>
 
-    <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Хабарлама жазыңыз..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">Жіберу</button>
+    <!-- Тез сұрақ қою чиптері -->
+    <div class="quick-chips" id="quickChips">
+        <!-- Ауысып отырады -->
+    </div>
+
+    <!-- Енгізу аймағы -->
+    <div class="chat-footer">
+        <div class="input-box">
+            <button class="icon-btn" id="micBtn" onclick="toggleVoice()" title="Дауыспен енгізу">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <input type="text" id="userInput" placeholder="Хабарлама жазыңыз..." onkeypress="handleKeyPress(event)">
+            <button class="icon-btn send-btn" onclick="sendMessage()">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
-    function sendMessage() {
-        const input = document.getElementById('userInput');
-        const chatBox = document.getElementById('chatBox');
-        const text = input.value.trim();
+    document.getElementById('initTime').innerText = getTime();
 
-        if (text === '') return;
+    // Режимдер: 'dating' немесе 'gov'
+    let currentMode = 'dating'; 
+    let isListening = false;
+    let recognition;
 
-        // Пайдаланушы хабарламасын қосу
-        const userDiv = document.createElement('div');
-        userDiv.className = 'message user-message';
-        userDiv.textContent = text;
-        chatBox.appendChild(userDiv);
+    // Шынайы дауыс тану
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
 
-        input.value = '';
-        chatBox.scrollTop = chatBox.scrollHeight;
+        recognition.onresult = function(e) {
+            document.getElementById('userInput').value = e.results[0][0].transcript;
+            toggleVoice();
+            sendMessage();
+        };
 
-        // AI жауабын симуляциялау
-        setTimeout(() => {
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot-message';
-            botDiv.textContent = getBotResponse(text);
-            chatBox.appendChild(botDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }, 600);
+        recognition.onerror = function() { toggleVoice(); };
     }
 
-    function handleKeyPress(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
+    function renderChips() {
+        const container = document.getElementById('quickChips');
+        if (currentMode === 'dating') {
+            container.innerHTML = `
+                <div class="chip" onclick="sendQuick('Қызға бірінші не деп жазсам болады?')">💌 Не деп жазсам болады?</div>
+                <div class="chip" onclick="sendQuick('Кездесуге қалай шақырамын?')">☕ Кездесуге шақыру</div>
+                <div class="chip" onclick="sendQuick('Әдемі комплимент айтып берші')">💖 Комплименттер</div>
+                <div class="chip" onclick="sendQuick('Өзіме сенімділікті қалай арттырам?')">🔥 Сенімділік</div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="chip" onclick="sendQuick('Жастарға арналған мемлекеттік бағдарламалар')">🏢 Жастар бағдарламасы</div>
+                <div class="chip" onclick="sendQuick('Отбасын қолдау және баспана')">🏠 Тұрғын үй жеңілдігі</div>
+                <div class="chip" onclick="sendQuick('Жастар кадрлық резерві деген не?')">🎓 Кадрлық резерв</div>
+                <div class="chip" onclick="sendQuick('Түсініктеме / Заңнамалық кеңес')">⚖️ Заңнамалық консультация</div>
+            `;
         }
     }
 
-    function getBotResponse(input) {
-        const lower = input.toLowerCase();
-        if (lower.includes('сәлем') || lower.includes('салам')) {
-            return 'Сәлем! Көңіл-күйіңіз қалай?';
-        } else if (lower.includes('қалайсың') || lower.includes('жағдай')) {
-            return 'Рақмет, бәрі тамаша! Өзіңізде қалай?';
-        } else if (lower.includes('атың кім') || lower.includes('кімсің')) {
-            return 'Мен Sabina AI — сіздің интеллектуалды виртуалды көмекшіңізбін!';
+    renderChips();
+
+    function toggleMode() {
+        const status = document.getElementById('modeStatus');
+        const modeBtn = document.getElementById('modeBtn');
+        const avatarIcon = document.getElementById('avatarIcon');
+
+        if (currentMode === 'dating') {
+            currentMode = 'gov';
+            status.innerText = "🏛️ Мемлекеттік & Әлеуметтік Модуль";
+            status.style.color = "#818cf8";
+            modeBtn.innerText = "💖 AI Серік Режимі";
+            avatarIcon.innerHTML = '<i class="fa-solid fa-building-columns"></i>';
+            addMessage("Режим ауысты. Енді мен мемлекеттік бағдарламалар, жастар саясаты және әлеуметтік қолдау бойынша ресми консультантпын.", 'bot');
         } else {
-            return 'Сізді түсіндім! Бұл демонстрациялық HTML нұсқасы болғандықтан, жауаптар шектеулі. Бірақ интерфейс жұмыс істеп тұр!';
+            currentMode = 'dating';
+            status.innerText = "💖 AI Серік & Танысу";
+            status.style.color = "#ec4899";
+            modeBtn.innerText = "🏛️ Мем. Режим";
+            avatarIcon.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            addMessage("Режим ауысты! Мен қайтадан сенің AI серігіңмін. Танысу, сөйлесу немесе көңіл-күй бойынша не талқылаймыз?", 'bot');
+        }
+        renderChips();
+    }
+
+    function toggleVoice() {
+        const btn = document.getElementById('micBtn');
+        if (!recognition) return alert('Браузеріңіз дауысты қолдамайды.');
+
+        if (!isListening) {
+            const lang = document.getElementById('langSelect').value;
+            recognition.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
+            recognition.start();
+            isListening = true;
+            btn.classList.add('mic-active');
+        } else {
+            recognition.stop();
+            isListening = false;
+            btn.classList.remove('mic-active');
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        if (text === '') return;
+
+        addMessage(text, 'user');
+        input.value = '';
+
+        setTimeout(() => {
+            const reply = getAIResponse(text);
+            addMessage(reply, 'bot');
+            speak(reply);
+        }, 600);
+    }
+
+    function sendQuick(text) {
+        document.getElementById('userInput').value = text;
+        sendMessage();
+    }
+
+    function addMessage(text, sender) {
+        const body = document.getElementById('chatBody');
+        const row = document.createElement('div');
+        row.className = `msg-row ${sender}`;
+        row.innerHTML = `
+            <div class="bubble">
+                ${text}
+                <span class="time">${getTime()}</span>
+            </div>
+        `;
+        body.appendChild(row);
+        body.scrollTop = body.scrollHeight;
+    }
+
+    function getTime() {
+        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            const ut = new SpeechSynthesisUtterance(text);
+            const lang = document.getElementById('langSelect').value;
+            ut.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
+            window.speechSynthesis.speak(ut);
+        }
+    }
+
+    function getAIResponse(msg) {
+        const t = msg.toLowerCase();
+
+        if (currentMode === 'dating') {
+            if (t.includes('жазсам') || t.includes('бірінші') || t.includes('таныс')) {
+                return "Қызға бірінші болып 'Сәлем, қалайсың?' десең, жауап алмауың мүмкін. Одан да оның суретінен немесе сторисінен бір қызық детальды тауып алып, сұрақ қой. Мысалы: 'Мына жер қай жер? Аурасы керемет екен!' — бұл диалогты оңай бастайды!";
+            } else if (t.includes('кездесу') || t.includes('шақыру')) {
+                return "Кездесуге шақырғанда нақты бол! 'Бірде кофе ішейік' демей, 'Сәрсенбіде сағат 19:00-де бос болсаң, жаңа кофеханаға барып қайтайық' де. Сенімділік қыздарға өте ұнайды.";
+            } else if (t.includes('комплимент')) {
+                return "Ең жақсы комплимент — сырт келбетке ғана емес, оның талғамына, күлкісіне немесе киім стиліне айтылған сөз. Мысалы: 'Сенің киім таңдау талғамың ерекше екен' немесе 'Күлкің айналаны жарық қылып жібереді екен'.";
+            } else {
+                return "Өте жақсы! Ең бастысы — табиғи бол, жасандылықсыз сөйлес. Мен сенің сенімді AI-серігің ретінде кез келген сәтте көмектесуге дайынмын 💖";
+            }
+        } else {
+            if (t.includes('жастар') || t.includes('бағдарлама')) {
+                return "ҚР Жастар саясаты шеңберінде: 'Жасыл ел', 'Серпін', 'Жұмысшы жастарға жалға берілатін баспана' және 'Жастар практикасы' сияқты бағдарламалар жұмыс істейді. Қайсысы туралы толығырақ білгіңіз келеді?";
+            } else if (t.includes('баспана') || t.includes('үй') || t.includes('отбасы')) {
+                return "Жас отбасылар мен жастар үшін Отбасы банк арқылы 'Елорда жастары', 'Алматы жастары' және '30/70' жеңілдетілген заемы арқылы тұрғын үй алу мүмкіндіктері қарастырылған.";
+            } else if (t.includes('резерв')) {
+                return "Президенттік жастар кадрлық резерві — дарынды жастарды мемлекеттік басқару жүйесіне тартуға арналған маңызды жоба. Іріктеу бірнеше кезеңнен тұрады.";
+            } else {
+                return "Сұранысыңыз мемлекеттік нормативтік база бойынша өңделді. Жастарды әлеуметтік қолдау бойынша кез келген қосымша ақпаратты беруге дайынмын.";
+            }
+        }
+    }
+
+    function changeLang() {
+        const lang = document.getElementById('langSelect').value;
+        const input = document.getElementById('userInput');
+        if (lang === 'ru') {
+            input.placeholder = "Введите сообщение...";
+        } else if (lang === 'en') {
+            input.placeholder = "Type your message...";
+        } else {
+            input.placeholder = "Хабарлама жазыңыз...";
         }
     }
 </script>
