@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SABINA AI — Virtual AI Companion</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 480px;
+            height: 90vh;
+            background-color: #1e293b;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6366f1;
+            font-size: 1.2rem;
+        }
+
+        .user-info h2 {
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: #e0e7ff;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .bot-message {
+            background-color: #334155;
+            color: #f8fafc;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .user-message {
+            background-color: #6366f1;
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background-color: #0f172a;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 25px;
+            border: 1px solid #334155;
+            background-color: #1e293b;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+        }
+
+        button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="avatar">S</div>
+        <div class="user-info">
+            <h2>Sabina AI 🚀</h2>
+            <p>Виртуалды AI Серік</p>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatBox">
+        <div class="message bot-message">
+            Сәлем! Мен Sabina AI виртуалды серігіңмін. Саған қалай көмектесе аламын?
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Хабарлама жазыңыз..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Жіберу</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatBox = document.getElementById('chatBox');
+        const text = input.value.trim();
+
+        if (text === '') return;
+
+        // Пайдаланушы хабарламасын қосу
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.textContent = text;
+        chatBox.appendChild(userDiv);
+
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // AI жауабын симуляциялау
+        setTimeout(() => {
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.textContent = getBotResponse(text);
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 600);
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    function getBotResponse(input) {
+        const lower = input.toLowerCase();
+        if (lower.includes('сәлем') || lower.includes('салам')) {
+            return 'Сәлем! Көңіл-күйіңіз қалай?';
+        } else if (lower.includes('қалайсың') || lower.includes('жағдай')) {
+            return 'Рақмет, бәрі тамаша! Өзіңізде қалай?';
+        } else if (lower.includes('атың кім') || lower.includes('кімсің')) {
+            return 'Мен Sabina AI — сіздің интеллектуалды виртуалды көмекшіңізбін!';
+        } else {
+            return 'Сізді түсіндім! Бұл демонстрациялық HTML нұсқасы болғандықтан, жауаптар шектеулі. Бірақ интерфейс жұмыс істеп тұр!';
+        }
+    }
+</script>
+
+</body>
+</html>
