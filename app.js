@@ -1,313 +1,480 @@
-```javascript
-/* =========================================================
-   ERNURVYNX AI — APP.JS
-   Main Application Logic
-   ========================================================= */
+/* ============================================================
+   ARUZHAN AI — APP.JS
+   AI COMPANION FRONTEND ENGINE
+   ============================================================ */
 
 "use strict";
 
-/* =========================================================
-   1. GLOBAL APP CONFIG
-   ========================================================= */
+/* ============================================================
+   1. APPLICATION CONFIG
+   ============================================================ */
 
-const APP_CONFIG = {
-    name: "ERNURVYNX AI",
-    version: "1.0.0",
-    defaultLanguage: "kz",
-    defaultTheme: "dark",
-    maxMessageLength: 4000,
-    typingSpeed: 25,
-    storagePrefix: "ernurvynx_"
+const CONFIG = {
+    appName: "ARUZHAN AI",
+    apiEndpoint: "/api/chat",
+    uploadEndpoint: "/api/upload",
+    maxMessageLength: 10000,
+    maxHistoryMessages: 100,
+    typingDelay: 300,
+    storageKey: "aruzhan_ai_state",
+    conversationKey: "aruzhan_ai_conversations",
+    themeKey: "aruzhan_ai_theme",
+    userKey: "aruzhan_ai_user"
 };
 
 
-/* =========================================================
-   2. GLOBAL STATE
-   ========================================================= */
+/* ============================================================
+   2. APPLICATION STATE
+   ============================================================ */
 
-const AppState = {
-    language: localStorage.getItem("ernurvynx_language") || APP_CONFIG.defaultLanguage,
+const state = {
 
-    theme: localStorage.getItem("ernurvynx_theme") || APP_CONFIG.defaultTheme,
+    currentMode: "companion",
 
-    isChatOpen: false,
+    currentConversationId: null,
 
-    isMobileMenuOpen: false,
+    isGenerating: false,
 
-    isTyping: false,
+    isRecording: false,
 
-    messages: JSON.parse(
-        localStorage.getItem("ernurvynx_chat_history") || "[]"
-    ),
+    isSidebarOpen: true,
+
+    isDarkMode: false,
+
+    selectedFile: null,
+
+    selectedImage: null,
+
+    messages: [],
+
+    conversations: [],
 
     user: {
-        name: localStorage.getItem("ernurvynx_user_name") || "Қонақ",
-        loggedIn: false
+        name: "Байрақ",
+        plan: "Free Plan"
     }
+
 };
 
 
-/* =========================================================
-   3. DOM ELEMENTS
-   ========================================================= */
+/* ============================================================
+   3. AI MODES
+   ============================================================ */
 
-const DOM = {
-    body: document.body,
+const AI_MODES = {
 
-    html: document.documentElement,
+    companion: {
+        name: "Companion",
+        description: "Досыңдай сөйлеседі",
+        systemRole: `
+Сен ARUZHAN AI Companion режимісің.
+Пайдаланушымен табиғи, жылы және түсінікті сөйлес.
+Пайдаланушының сұрағын нақты түсінуге тырыс.
+Қажет болса сұрақ қой.
+Артық сөз қолданба.
+Жауапты пайдаланушының сұрағына сәйкес бер.
+        `
+    },
 
-    navbar: document.querySelector(".navbar"),
+    smart: {
+        name: "Smart AI",
+        description: "Ақылды әмбебап көмекші",
+        systemRole: `
+Сен ARUZHAN AI Smart режимісің.
+Кез келген тақырып бойынша пайдалы және нақты жауап бер.
+Күрделі нәрсені қарапайым тілмен түсіндір.
+Факт пен болжамды шатастырма.
+        `
+    },
 
-    mobileMenu: document.querySelector(".mobile-menu"),
+    study: {
+        name: "Study",
+        description: "Оқу және білім",
+        systemRole: `
+Сен ARUZHAN AI Study режимісің.
+Оқушыға немесе студентке оқу барысында көмектес.
+Тақырыптарды кезең-кезеңімен түсіндір.
+Есептерді шешкенде логикасын көрсет.
+        `
+    },
 
-    mobileMenuButton: document.querySelector(".mobile-menu-btn"),
+    developer: {
+        name: "Developer",
+        description: "Бағдарламалау көмекшісі",
+        systemRole: `
+Сен ARUZHAN AI Developer режимісің.
+HTML, CSS, JavaScript, React, Next.js, Python,
+C++, Java, C#, PHP, SQL және басқа технологиялар
+бойынша бағдарламашыға көмектес.
+Кодты таза және түсінікті жаз.
+Қате код бермеуге тырыс.
+        `
+    },
 
-    mobileMenuClose: document.querySelector(".mobile-menu-close"),
+    motivation: {
+        name: "Motivation",
+        description: "Мотивация және қолдау",
+        systemRole: `
+Сен ARUZHAN AI Motivation режимісің.
+Пайдаланушыға қолдау көрсет.
+Мақсат қоюға және жоспар жасауға көмектес.
+Жауаптарың табиғи және шынайы болсын.
+        `
+    }
 
-    chatWidget: document.querySelector(".chat-widget"),
-
-    chatButton: document.querySelector(".chat-button"),
-
-    chatWindow: document.querySelector(".chat-window"),
-
-    chatClose: document.querySelector(".chat-close"),
-
-    chatMessages: document.querySelector(".chat-messages"),
-
-    chatInput: document.querySelector(".chat-input"),
-
-    chatSend: document.querySelector(".chat-send"),
-
-    typingIndicator: document.querySelector(".typing-indicator"),
-
-    languageButton: document.querySelector(".language-btn"),
-
-    languageMenu: document.querySelector(".language-menu"),
-
-    themeButton: document.querySelector(".theme-toggle"),
-
-    scrollTopButton: document.querySelector(".scroll-top"),
-
-    contactForm: document.querySelector("#contactForm"),
-
-    newsletterForm: document.querySelector("#newsletterForm"),
-
-    preloader: document.querySelector(".preloader")
 };
 
 
-/* =========================================================
-   4. INITIALIZATION
-   ========================================================= */
+/* ============================================================
+   4. DOM SELECTORS
+   ============================================================ */
 
-document.addEventListener("DOMContentLoaded", () => {
+const elements = {
 
-    console.log(
-        `%c${APP_CONFIG.name} v${APP_CONFIG.version}`,
-        "color:#00e5ff;font-size:18px;font-weight:bold;"
-    );
+    body:
+        document.body,
 
-    initializeApp();
+    html:
+        document.documentElement,
 
-});
+    sidebar:
+        document.querySelector(".sidebar"),
+
+    sidebarToggle:
+        document.querySelector(".sidebar-toggle"),
+
+    mobileMenuButton:
+        document.querySelector(".mobile-menu-button"),
+
+    newChatButton:
+        document.querySelector(".new-chat"),
+
+    chatSearch:
+        document.querySelector(".chat-search"),
+
+    chatList:
+        document.querySelector(".chat-list"),
+
+    modeItems:
+        document.querySelectorAll("[data-mode]"),
+
+    currentModeName:
+        document.querySelector(".current-mode-name"),
+
+    currentModeDescription:
+        document.querySelector(".current-mode-description"),
+
+    currentModeIcon:
+        document.querySelector(".current-mode-icon"),
+
+    chatMessages:
+        document.querySelector(".chat-messages"),
+
+    messageInput:
+        document.querySelector(".message-input"),
+
+    sendButton:
+        document.querySelector(".send-button"),
+
+    attachButton:
+        document.querySelector(".attach-button"),
+
+    imageButton:
+        document.querySelector(".image-button"),
+
+    fileInput:
+        document.querySelector(".file-input"),
+
+    imageInput:
+        document.querySelector(".image-input"),
+
+    voiceButton:
+        document.querySelector(".voice-button"),
+
+    emojiButton:
+        document.querySelector(".emoji-button"),
+
+    themeButton:
+        document.querySelector(".theme-button"),
+
+    userMenu:
+        document.querySelector(".user-menu"),
+
+    userName:
+        document.querySelector(".user-name"),
+
+    userPlan:
+        document.querySelector(".user-plan"),
+
+    charCounter:
+        document.querySelector(".char-counter"),
+
+    typingIndicator:
+        document.querySelector(".typing-indicator"),
+
+    welcomeScreen:
+        document.querySelector(".welcome-screen"),
+
+    conversationList:
+        document.querySelector(".conversation-list"),
+
+    searchButton:
+        document.querySelector(".search-button"),
+
+    notificationButton:
+        document.querySelector(".notification-button"),
+
+    settingsButton:
+        document.querySelector(".settings-button"),
+
+    voiceModal:
+        document.querySelector(".voice-modal"),
+
+    closeVoiceModal:
+        document.querySelector(".close-voice-modal"),
+
+    filePreview:
+        document.querySelector(".file-preview")
+
+};
 
 
-function initializeApp() {
+/* ============================================================
+   5. APPLICATION INITIALIZATION
+   ============================================================ */
 
-    applyTheme();
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeApplication
+);
 
-    applyLanguage();
 
-    initializeNavigation();
+function initializeApplication() {
 
-    initializeMobileMenu();
+    loadApplicationState();
+
+    initializeTheme();
+
+    initializeSidebar();
 
     initializeChat();
 
-    initializeThemeToggle();
+    initializeModes();
 
-    initializeLanguageSwitcher();
+    initializeFileUpload();
 
-    initializeScrollEffects();
+    initializeVoiceRecognition();
 
-    initializeForms();
+    initializeSearch();
 
-    initializeAnimations();
+    initializeUserActions();
 
-    initializePreloader();
+    initializeKeyboardShortcuts();
 
-    restoreChatHistory();
+    initializeAutoResize();
 
-    updateCurrentYear();
+    renderConversations();
 
-}
+    updateUserInterface();
 
-
-/* =========================================================
-   5. NAVIGATION
-   ========================================================= */
-
-function initializeNavigation() {
-
-    const navLinks = document.querySelectorAll(
-        ".nav-link, [data-scroll]"
+    console.log(
+        `${CONFIG.appName} initialized successfully`
     );
 
-    navLinks.forEach(link => {
-
-        link.addEventListener("click", event => {
-
-            const targetId =
-                link.getAttribute("href") ||
-                link.dataset.scroll;
-
-            if (!targetId) return;
-
-            if (targetId.startsWith("#")) {
-
-                event.preventDefault();
-
-                const target = document.querySelector(targetId);
-
-                if (target) {
-
-                    target.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-
-                }
-
-            }
-
-            closeMobileMenu();
-
-        });
-
-    });
-
 }
 
 
-/* =========================================================
-   6. MOBILE MENU
-   ========================================================= */
+/* ============================================================
+   6. LOAD STATE
+   ============================================================ */
 
-function initializeMobileMenu() {
+function loadApplicationState() {
 
-    if (DOM.mobileMenuButton) {
+    try {
 
-        DOM.mobileMenuButton.addEventListener(
-            "click",
-            openMobileMenu
-        );
+        const savedState =
+            localStorage.getItem(
+                CONFIG.storageKey
+            );
 
-    }
+        if (savedState) {
 
-    if (DOM.mobileMenuClose) {
+            const parsed =
+                JSON.parse(savedState);
 
-        DOM.mobileMenuClose.addEventListener(
-            "click",
-            closeMobileMenu
-        );
-
-    }
-
-    document.addEventListener("click", event => {
-
-        if (
-            AppState.isMobileMenuOpen &&
-            DOM.mobileMenu &&
-            !DOM.mobileMenu.contains(event.target) &&
-            !DOM.mobileMenuButton?.contains(event.target)
-        ) {
-
-            closeMobileMenu();
+            Object.assign(
+                state,
+                parsed
+            );
 
         }
 
-    });
+    } catch (error) {
+
+        console.error(
+            "State loading error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const savedConversations =
+            localStorage.getItem(
+                CONFIG.conversationKey
+            );
+
+        if (savedConversations) {
+
+            state.conversations =
+                JSON.parse(
+                    savedConversations
+                );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Conversation loading error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const savedUser =
+            localStorage.getItem(
+                CONFIG.userKey
+            );
+
+        if (savedUser) {
+
+            state.user =
+                JSON.parse(
+                    savedUser
+                );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "User loading error:",
+            error
+        );
+
+    }
 
 }
 
 
-function openMobileMenu() {
+/* ============================================================
+   7. SAVE STATE
+   ============================================================ */
 
-    if (!DOM.mobileMenu) return;
+function saveApplicationState() {
 
-    AppState.isMobileMenuOpen = true;
+    try {
 
-    DOM.mobileMenu.classList.add("active");
+        localStorage.setItem(
 
-    DOM.body.classList.add("menu-open");
+            CONFIG.storageKey,
+
+            JSON.stringify({
+
+                currentMode:
+                    state.currentMode,
+
+                currentConversationId:
+                    state.currentConversationId
+
+            })
+
+        );
+
+    } catch (error) {
+
+        console.error(
+            "State save error:",
+            error
+        );
+
+    }
 
 }
 
 
-function closeMobileMenu() {
+function saveConversations() {
 
-    if (!DOM.mobileMenu) return;
+    localStorage.setItem(
 
-    AppState.isMobileMenuOpen = false;
+        CONFIG.conversationKey,
 
-    DOM.mobileMenu.classList.remove("active");
+        JSON.stringify(
+            state.conversations
+        )
 
-    DOM.body.classList.remove("menu-open");
+    );
 
 }
 
 
-/* =========================================================
-   7. AI CHAT SYSTEM
-   ========================================================= */
+function saveUser() {
+
+    localStorage.setItem(
+
+        CONFIG.userKey,
+
+        JSON.stringify(
+            state.user
+        )
+
+    );
+
+}
+
+
+/* ============================================================
+   8. CHAT INITIALIZATION
+   ============================================================ */
 
 function initializeChat() {
 
-    if (DOM.chatButton) {
+    if (elements.sendButton) {
 
-        DOM.chatButton.addEventListener(
+        elements.sendButton.addEventListener(
             "click",
-            toggleChat
+            handleSendMessage
         );
 
     }
 
-    if (DOM.chatClose) {
 
-        DOM.chatClose.addEventListener(
-            "click",
-            closeChat
-        );
+    if (elements.messageInput) {
 
-    }
-
-    if (DOM.chatSend) {
-
-        DOM.chatSend.addEventListener(
-            "click",
-            sendMessage
-        );
-
-    }
-
-    if (DOM.chatInput) {
-
-        DOM.chatInput.addEventListener(
+        elements.messageInput.addEventListener(
             "keydown",
-            event => {
+            handleInputKeydown
+        );
 
-                if (
-                    event.key === "Enter" &&
-                    !event.shiftKey
-                ) {
+        elements.messageInput.addEventListener(
+            "input",
+            handleInputChange
+        );
 
-                    event.preventDefault();
+    }
 
-                    sendMessage();
 
-                }
+    if (elements.newChatButton) {
 
-            }
+        elements.newChatButton.addEventListener(
+            "click",
+            createNewConversation
         );
 
     }
@@ -315,58 +482,43 @@ function initializeChat() {
 }
 
 
-function toggleChat() {
+/* ============================================================
+   9. SEND MESSAGE
+   ============================================================ */
 
-    if (AppState.isChatOpen) {
+async function handleSendMessage() {
 
-        closeChat();
+    if (state.isGenerating) {
 
-    } else {
-
-        openChat();
+        return;
 
     }
 
-}
+
+    if (!elements.messageInput) {
+
+        return;
+
+    }
 
 
-function openChat() {
-
-    if (!DOM.chatWindow) return;
-
-    AppState.isChatOpen = true;
-
-    DOM.chatWindow.classList.add("active");
-
-    DOM.chatInput?.focus();
-
-}
+    const message =
+        elements.messageInput
+            .value
+            .trim();
 
 
-function closeChat() {
+    if (!message) {
 
-    if (!DOM.chatWindow) return;
+        return;
 
-    AppState.isChatOpen = false;
-
-    DOM.chatWindow.classList.remove("active");
-
-}
+    }
 
 
-/* =========================================================
-   8. SEND MESSAGE
-   ========================================================= */
-
-async function sendMessage() {
-
-    if (!DOM.chatInput) return;
-
-    const message = DOM.chatInput.value.trim();
-
-    if (!message) return;
-
-    if (message.length > APP_CONFIG.maxMessageLength) {
+    if (
+        message.length >
+        CONFIG.maxMessageLength
+    ) {
 
         showNotification(
             "Хабарлама тым ұзын.",
@@ -377,296 +529,495 @@ async function sendMessage() {
 
     }
 
-    addMessage(
-        message,
-        "user"
+
+    if (
+        !state.currentConversationId
+    ) {
+
+        createNewConversation(
+            false
+        );
+
+    }
+
+
+    addUserMessage(
+        message
     );
 
-    DOM.chatInput.value = "";
 
-    showTyping();
+    elements.messageInput.value = "";
 
-    const response = await generateAIResponse(message);
+    updateCharacterCounter();
 
-    hideTyping();
+    resetInputHeight();
 
-    addMessage(
-        response,
-        "ai"
+
+    await requestAIResponse(
+        message
     );
 
 }
 
 
-/* =========================================================
-   9. ADD CHAT MESSAGE
-   ========================================================= */
+/* ============================================================
+   10. AI API REQUEST
+   ============================================================ */
 
-function addMessage(
-    text,
-    sender = "ai"
+async function requestAIResponse(
+    message
 ) {
 
-    if (!DOM.chatMessages) return;
+    state.isGenerating = true;
 
-    const messageElement =
-        document.createElement("div");
+    updateSendButton();
 
-    messageElement.className =
-        `chat-message ${sender}-message`;
+    showTypingIndicator();
+
+
+    const conversation =
+        getCurrentConversation();
+
+
+    const history =
+        conversation
+            ? conversation.messages
+            : [];
+
+
+    const mode =
+        AI_MODES[
+            state.currentMode
+        ];
+
+
+    try {
+
+        const response =
+            await fetch(
+                CONFIG.apiEndpoint,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            message:
+                                message,
+
+                            mode:
+                                state.currentMode,
+
+                            systemRole:
+                                mode
+                                    ?.systemRole
+                                    || "",
+
+                            conversationId:
+                                state.currentConversationId,
+
+                            history:
+                                history
+                                    .slice(
+                                        -20
+                                    )
+
+                        })
+
+                }
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                `HTTP Error: ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        hideTypingIndicator();
+
+
+        const aiResponse =
+            data.reply ||
+            data.message ||
+            data.content;
+
+
+        if (!aiResponse) {
+
+            throw new Error(
+                "AI response is empty"
+            );
+
+        }
+
+
+        addAIMessage(
+            aiResponse
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "AI request error:",
+            error
+        );
+
+
+        hideTypingIndicator();
+
+
+        addSystemMessage(
+
+            "AI серверімен байланыс орнатылмады. " +
+            "Backend серверін тексеріңіз."
+
+        );
+
+    } finally {
+
+        state.isGenerating =
+            false;
+
+        updateSendButton();
+
+    }
+
+}
+
+
+/* ============================================================
+   11. ADD USER MESSAGE
+   ============================================================ */
+
+function addUserMessage(
+    message
+) {
+
+    const messageObject = {
+
+        id:
+            generateId(),
+
+        role:
+            "user",
+
+        content:
+            message,
+
+        timestamp:
+            Date.now()
+
+    };
+
+
+    state.messages.push(
+        messageObject
+    );
+
+
+    const conversation =
+        getCurrentConversation();
+
+
+    if (conversation) {
+
+        conversation.messages.push(
+            messageObject
+        );
+
+        conversation.updatedAt =
+            Date.now();
+
+    }
+
+
+    renderMessage(
+        messageObject
+    );
+
+
+    saveConversations();
+
+    scrollChatToBottom();
+
+}
+
+
+/* ============================================================
+   12. ADD AI MESSAGE
+   ============================================================ */
+
+function addAIMessage(
+    message
+) {
+
+    const messageObject = {
+
+        id:
+            generateId(),
+
+        role:
+            "assistant",
+
+        content:
+            message,
+
+        timestamp:
+            Date.now()
+
+    };
+
+
+    state.messages.push(
+        messageObject
+    );
+
+
+    const conversation =
+        getCurrentConversation();
+
+
+    if (conversation) {
+
+        conversation.messages.push(
+            messageObject
+        );
+
+        conversation.updatedAt =
+            Date.now();
+
+    }
+
+
+    renderMessage(
+        messageObject
+    );
+
+
+    saveConversations();
+
+    renderConversations();
+
+    scrollChatToBottom();
+
+}
+
+
+/* ============================================================
+   13. SYSTEM MESSAGE
+   ============================================================ */
+
+function addSystemMessage(
+    message
+) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "system-message";
+
+
+    element.textContent =
+        message;
+
+
+    elements.chatMessages
+        ?.appendChild(
+            element
+        );
+
+
+    scrollChatToBottom();
+
+}
+
+
+/* ============================================================
+   14. RENDER MESSAGE
+   ============================================================ */
+
+function renderMessage(
+    message
+) {
+
+    if (
+        !elements.chatMessages
+    ) {
+
+        return;
+
+    }
+
+
+    hideWelcomeScreen();
+
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.className =
+        `message-wrapper ${message.role}`;
+
+
+    wrapper.dataset.messageId =
+        message.id;
+
 
     const avatar =
-        sender === "ai"
-            ? "🤖"
-            : "👤";
+        document.createElement(
+            "div"
+        );
 
-    messageElement.innerHTML = `
 
-        <div class="message-avatar">
-            ${avatar}
-        </div>
+    avatar.className =
+        "message-avatar";
 
-        <div class="message-content">
-            <div class="message-text">
-                ${escapeHTML(text)}
-            </div>
 
-            <div class="message-time">
-                ${getCurrentTime()}
-            </div>
-        </div>
+    avatar.textContent =
+        message.role === "user"
+            ? getUserInitial()
+            : "A";
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+
+    content.className =
+        "message-content";
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+
+    bubble.className =
+        "message-bubble";
+
+
+    if (
+        message.role === "assistant"
+    ) {
+
+        bubble.innerHTML =
+            formatAIResponse(
+                message.content
+            );
+
+    } else {
+
+        bubble.textContent =
+            message.content;
+
+    }
+
+
+    const footer =
+        document.createElement(
+            "div"
+        );
+
+
+    footer.className =
+        "message-footer";
+
+
+    footer.innerHTML = `
+
+        <span class="message-time">
+            ${formatTime(message.timestamp)}
+        </span>
+
+        ${
+            message.role === "assistant"
+            ? `
+                <button
+                    class="copy-message"
+                    data-copy="${escapeAttribute(message.content)}"
+                    title="Көшіру"
+                >
+                    ⧉
+                </button>
+            `
+            : ""
+        }
 
     `;
 
-    DOM.chatMessages.appendChild(
-        messageElement
-    );
 
-    DOM.chatMessages.scrollTop =
-        DOM.chatMessages.scrollHeight;
-
-    AppState.messages.push({
-        text,
-        sender,
-        time: Date.now()
-    });
-
-    saveChatHistory();
-
-}
-
-
-/* =========================================================
-   10. AI RESPONSE ENGINE
-   ========================================================= */
-
-async function generateAIResponse(message) {
-
-    const text =
-        message.toLowerCase().trim();
-
-    /*
-       IMPORTANT:
-
-       Бұл — frontend demo AI engine.
-
-       Егер нақты AI керек болса,
-       OpenAI API немесе басқа AI API
-       backend арқылы қосылады.
-
-       API key-ді frontend-ке жазуға болмайды.
-    */
-
-
-    await delay(
-        500 + Math.random() * 1000
+    content.appendChild(
+        bubble
     );
 
 
-    /* GREETING */
-
-    if (
-        containsAny(
-            text,
-            [
-                "сәлем",
-                "салем",
-                "hello",
-                "hi",
-                "привет"
-            ]
-        )
-    ) {
-
-        return AppState.language === "kz"
-
-            ? "Сәлем! 👋 Мен ERNURVYNX AI көмекшісімін. Саған сайт жасау, бағдарламалау, AI, дизайн және технология бойынша көмектесе аламын."
-
-            : "Сәлем! 👋 Мен сізге көмектесуге дайынмын.";
-
-    }
+    content.appendChild(
+        footer
+    );
 
 
-    /* WHO ARE YOU */
-
-    if (
-        containsAny(
-            text,
-            [
-                "сен кімсің",
-                "сен кимсин",
-                "who are you",
-                "кто ты"
-            ]
-        )
-    ) {
-
-        return "Мен — ERNURVYNX AI жүйесінің виртуалды көмекшісімін. Мен бағдарламалау, веб-сайт жасау, AI технологиялары, дизайн және жобалар бойынша кеңес бере аламын.";
-
-    }
+    wrapper.appendChild(
+        avatar
+    );
 
 
-    /* WEBSITE */
-
-    if (
-        containsAny(
-            text,
-            [
-                "сайт",
-                "website",
-                "веб",
-                "лендинг"
-            ]
-        )
-    ) {
-
-        return "Сайт жасау үшін HTML + CSS + JavaScript қолдануға болады. Үлкен жобаларда React, Next.js, Node.js және дерекқор қосуға болады. ERNURVYNX жобасын болашақта толық AI платформаға айналдыруға мүмкіндік бар.";
-
-    }
+    wrapper.appendChild(
+        content
+    );
 
 
-    /* HTML */
-
-    if (
-        text.includes("html")
-    ) {
-
-        return "HTML — сайттың құрылымын жасайтын тіл. Мысалы: header, hero, sections, cards, footer және басқа элементтер HTML арқылы құрылады.";
-
-    }
+    elements.chatMessages.appendChild(
+        wrapper
+    );
 
 
-    /* CSS */
-
-    if (
-        text.includes("css")
-    ) {
-
-        return "CSS сайттың сыртқы дизайнын басқарады: түстер, анимациялар, өлшемдер, responsive дизайн, glassmorphism және neon эффектілер.";
-
-    }
+    const copyButton =
+        wrapper.querySelector(
+            ".copy-message"
+        );
 
 
-    /* JAVASCRIPT */
+    if (copyButton) {
 
-    if (
-        text.includes("javascript") ||
-        text.includes("js")
-    ) {
+        copyButton.addEventListener(
+            "click",
+            () => {
 
-        return "JavaScript сайтқа интерактивтілік береді. Мысалы: AI chat, modal, mobile menu, language switcher, animations және API интеграцияларын жасауға болады.";
+                copyToClipboard(
+                    message.content
+                );
 
-    }
-
-
-    /* AI */
-
-    if (
-        text.includes("ai") ||
-        text.includes("ии") ||
-        text.includes("жасанды интеллект")
-    ) {
-
-        return "AI функцияларын сайтқа API арқылы қосуға болады. Мысалы, чат-бот, мәтін генерациясы, сурет генерациясы, код көмекшісі және ақылды іздеу жүйесін жасауға болады.";
-
-    }
-
-
-    /* PROJECT */
-
-    if (
-        containsAny(
-            text,
-            [
-                "жоба",
-                "проект",
-                "project"
-            ]
-        )
-    ) {
-
-        return "Жобаны үлкен платформаға айналдыру үшін аккаунт жүйесі, AI чат, профиль, dashboard, база данных, API, төлем жүйесі және мобильді нұсқаны қосуға болады.";
-
-    }
-
-
-    /* THANK YOU */
-
-    if (
-        containsAny(
-            text,
-            [
-                "рахмет",
-                "спасибо",
-                "thanks"
-            ]
-        )
-    ) {
-
-        return "Әрқашан көмектесуге дайынмын! 🚀";
-
-    }
-
-
-    /* DEFAULT RESPONSE */
-
-    return `
-Мен сұрағыңызды түсіндім. 🤖
-
-Сіз сұраған тақырып бойынша нақты жауап беру үшін
-ERNURVYNX AI жүйесіне толық AI API қосуға болады.
-
-Қазіргі frontend нұсқасында мен:
-• сайт жасау
-• HTML
-• CSS
-• JavaScript
-• React
-• AI
-• дизайн
-• жобалар
-
-туралы негізгі кеңес бере аламын.
-
-Нақты кез келген сұраққа жауап беру үшін
-backend + AI API интеграциясын қосу керек.
-`;
-
-}
-
-
-/* =========================================================
-   11. TYPING INDICATOR
-   ========================================================= */
-
-function showTyping() {
-
-    AppState.isTyping = true;
-
-    if (DOM.typingIndicator) {
-
-        DOM.typingIndicator.classList.add(
-            "active"
+            }
         );
 
     }
@@ -674,106 +1025,909 @@ function showTyping() {
 }
 
 
-function hideTyping() {
+/* ============================================================
+   15. FORMAT AI RESPONSE
+   ============================================================ */
 
-    AppState.isTyping = false;
+function formatAIResponse(
+    text
+) {
 
-    if (DOM.typingIndicator) {
+    if (!text) {
 
-        DOM.typingIndicator.classList.remove(
-            "active"
+        return "";
+
+    }
+
+
+    let formatted =
+        escapeHTML(
+            text
         );
+
+
+    formatted =
+        formatted.replace(
+            /```([\s\S]*?)```/g,
+            match => {
+
+                const code =
+                    match
+                        .replace(
+                            /```[a-zA-Z]*\n?/,
+                            ""
+                        )
+                        .replace(
+                            /```$/,
+                            ""
+                        );
+
+                return `
+
+                    <div class="code-block">
+
+                        <button
+                            class="copy-code"
+                            onclick="copyToClipboard(
+                                this.nextElementSibling.textContent
+                            )"
+                        >
+                            Көшіру
+                        </button>
+
+                        <pre><code>${code}</code></pre>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+    formatted =
+        formatted.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /\*(.*?)\*/g,
+            "<em>$1</em>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /^### (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /^## (.*)$/gm,
+            "<h2>$1</h2>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /^# (.*)$/gm,
+            "<h1>$1</h1>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /^- (.*)$/gm,
+            "<li>$1</li>"
+        );
+
+
+    formatted =
+        formatted.replace(
+            /\n/g,
+            "<br>"
+        );
+
+
+    return formatted;
+
+}
+
+
+/* ============================================================
+   16. NEW CONVERSATION
+   ============================================================ */
+
+function createNewConversation(
+    autoFocus = true
+) {
+
+    const conversation = {
+
+        id:
+            generateId(),
+
+        title:
+            "Жаңа чат",
+
+        mode:
+            state.currentMode,
+
+        messages:
+            [],
+
+        createdAt:
+            Date.now(),
+
+        updatedAt:
+            Date.now()
+
+    };
+
+
+    state.conversations.unshift(
+        conversation
+    );
+
+
+    state.currentConversationId =
+        conversation.id;
+
+
+    state.messages = [];
+
+
+    clearChatUI();
+
+
+    saveConversations();
+
+    saveApplicationState();
+
+    renderConversations();
+
+
+    if (
+        autoFocus &&
+        elements.messageInput
+    ) {
+
+        elements.messageInput.focus();
 
     }
 
 }
 
 
-/* =========================================================
-   12. CHAT HISTORY
-   ========================================================= */
+/* ============================================================
+   17. GET CURRENT CONVERSATION
+   ============================================================ */
 
-function saveChatHistory() {
+function getCurrentConversation() {
 
-    localStorage.setItem(
-        "ernurvynx_chat_history",
-        JSON.stringify(
-            AppState.messages
-        )
+    return state.conversations.find(
+
+        conversation =>
+
+            conversation.id ===
+            state.currentConversationId
+
     );
 
 }
 
 
-function restoreChatHistory() {
+/* ============================================================
+   18. LOAD CONVERSATION
+   ============================================================ */
 
-    if (!DOM.chatMessages) return;
+function loadConversation(
+    conversationId
+) {
 
-    AppState.messages.forEach(
+    const conversation =
+        state.conversations.find(
+
+            item =>
+                item.id ===
+                conversationId
+
+        );
+
+
+    if (!conversation) {
+
+        return;
+
+    }
+
+
+    state.currentConversationId =
+        conversation.id;
+
+
+    state.currentMode =
+        conversation.mode ||
+        "companion";
+
+
+    state.messages =
+        [
+            ...conversation.messages
+        ];
+
+
+    clearChatUI();
+
+
+    conversation.messages.forEach(
+
         message => {
 
-            const element =
-                document.createElement("div");
-
-            element.className =
-                `chat-message ${message.sender}-message`;
-
-            element.innerHTML = `
-
-                <div class="message-avatar">
-                    ${
-                        message.sender === "ai"
-                            ? "🤖"
-                            : "👤"
-                    }
-                </div>
-
-                <div class="message-content">
-
-                    <div class="message-text">
-                        ${escapeHTML(message.text)}
-                    </div>
-
-                    <div class="message-time">
-                        ${formatTime(message.time)}
-                    </div>
-
-                </div>
-
-            `;
-
-            DOM.chatMessages.appendChild(
-                element
+            renderMessage(
+                message
             );
+
+        }
+
+    );
+
+
+    updateModeUI();
+
+    saveApplicationState();
+
+    scrollChatToBottom();
+
+}
+
+
+/* ============================================================
+   19. CLEAR CHAT UI
+   ============================================================ */
+
+function clearChatUI() {
+
+    if (
+        !elements.chatMessages
+    ) {
+
+        return;
+
+    }
+
+
+    elements.chatMessages.innerHTML =
+        "";
+
+
+    showWelcomeScreen();
+
+}
+
+
+/* ============================================================
+   20. CONVERSATION LIST
+   ============================================================ */
+
+function renderConversations(
+    searchTerm = ""
+) {
+
+    if (
+        !elements.conversationList
+    ) {
+
+        return;
+
+    }
+
+
+    elements.conversationList.innerHTML =
+        "";
+
+
+    const normalizedSearch =
+        searchTerm
+            .toLowerCase()
+            .trim();
+
+
+    const conversations =
+        state.conversations
+            .filter(
+
+                conversation => {
+
+                    if (
+                        !normalizedSearch
+                    ) {
+
+                        return true;
+
+                    }
+
+
+                    return conversation.title
+                        .toLowerCase()
+                        .includes(
+                            normalizedSearch
+                        );
+
+                }
+
+            );
+
+
+    conversations.forEach(
+
+        conversation => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "conversation-item";
+
+
+            if (
+                conversation.id ===
+                state.currentConversationId
+            ) {
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            item.dataset.id =
+                conversation.id;
+
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+
+            title.className =
+                "conversation-title";
+
+
+            title.textContent =
+                conversation.title;
+
+
+            const menu =
+                document.createElement(
+                    "button"
+                );
+
+
+            menu.className =
+                "conversation-menu";
+
+
+            menu.textContent =
+                "⋮";
+
+
+            item.appendChild(
+                title
+            );
+
+
+            item.appendChild(
+                menu
+            );
+
+
+            item.addEventListener(
+                "click",
+                () => {
+
+                    loadConversation(
+                        conversation.id
+                    );
+
+                }
+            );
+
+
+            menu.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    showConversationMenu(
+                        conversation,
+                        item
+                    );
+
+                }
+            );
+
+
+            elements.conversationList.appendChild(
+                item
+            );
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   21. AUTO TITLE
+   ============================================================ */
+
+function updateConversationTitle(
+    conversation,
+    firstMessage
+) {
+
+    if (
+        !conversation
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        conversation.title !==
+        "Жаңа чат"
+    ) {
+
+        return;
+
+    }
+
+
+    const cleanText =
+        firstMessage
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+
+    conversation.title =
+        cleanText.length > 35
+            ? cleanText.substring(
+                0,
+                35
+            ) + "..."
+            : cleanText;
+
+
+    saveConversations();
+
+    renderConversations();
+
+}
+
+
+/* ============================================================
+   22. CONVERSATION MENU
+   ============================================================ */
+
+function showConversationMenu(
+    conversation,
+    element
+) {
+
+    const menu =
+        document.createElement(
+            "div"
+        );
+
+
+    menu.className =
+        "conversation-context-menu";
+
+
+    menu.innerHTML = `
+
+        <button data-action="rename">
+            Атын өзгерту
+        </button>
+
+        <button data-action="delete">
+            Өшіру
+        </button>
+
+    `;
+
+
+    document.body.appendChild(
+        menu
+    );
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    menu.style.top =
+        `${rect.bottom + 5}px`;
+
+
+    menu.style.left =
+        `${rect.left + 100}px`;
+
+
+    menu.querySelector(
+        '[data-action="rename"]'
+    ).addEventListener(
+        "click",
+        () => {
+
+            renameConversation(
+                conversation
+            );
+
+            menu.remove();
 
         }
     );
 
-}
 
-
-/* =========================================================
-   13. THEME SYSTEM
-   ========================================================= */
-
-function initializeThemeToggle() {
-
-    if (!DOM.themeButton) return;
-
-    DOM.themeButton.addEventListener(
+    menu.querySelector(
+        '[data-action="delete"]'
+    ).addEventListener(
         "click",
-        toggleTheme
+        () => {
+
+            deleteConversation(
+                conversation.id
+            );
+
+            menu.remove();
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            document.addEventListener(
+                "click",
+                function closeMenu() {
+
+                    menu.remove();
+
+                    document.removeEventListener(
+                        "click",
+                        closeMenu
+                    );
+
+                },
+                {
+                    once: true
+                }
+            );
+
+        },
+        10
     );
 
 }
 
 
-function toggleTheme() {
+/* ============================================================
+   23. RENAME CONVERSATION
+   ============================================================ */
 
-    AppState.theme =
-        AppState.theme === "dark"
-            ? "light"
-            : "dark";
+function renameConversation(
+    conversation
+) {
+
+    const newTitle =
+        prompt(
+            "Чат атауы:",
+            conversation.title
+        );
+
+
+    if (
+        !newTitle ||
+        !newTitle.trim()
+    ) {
+
+        return;
+
+    }
+
+
+    conversation.title =
+        newTitle.trim();
+
+
+    saveConversations();
+
+    renderConversations();
+
+}
+
+
+/* ============================================================
+   24. DELETE CONVERSATION
+   ============================================================ */
+
+function deleteConversation(
+    conversationId
+) {
+
+    const confirmed =
+        confirm(
+            "Бұл чатты өшіру керек пе?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    state.conversations =
+        state.conversations.filter(
+
+            conversation =>
+                conversation.id !==
+                conversationId
+
+        );
+
+
+    if (
+        state.currentConversationId ===
+        conversationId
+    ) {
+
+        state.currentConversationId =
+            null;
+
+        state.messages =
+            [];
+
+        clearChatUI();
+
+    }
+
+
+    saveConversations();
+
+    saveApplicationState();
+
+    renderConversations();
+
+}
+
+
+/* ============================================================
+   25. AI MODES
+   ============================================================ */
+
+function initializeModes() {
+
+    elements.modeItems?.forEach(
+
+        item => {
+
+            item.addEventListener(
+                "click",
+                () => {
+
+                    const mode =
+                        item.dataset.mode;
+
+
+                    if (
+                        !AI_MODES[mode]
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    state.currentMode =
+                        mode;
+
+
+                    const conversation =
+                        getCurrentConversation();
+
+
+                    if (
+                        conversation
+                    ) {
+
+                        conversation.mode =
+                            mode;
+
+                    }
+
+
+                    updateModeUI();
+
+                    saveApplicationState();
+
+                    saveConversations();
+
+                }
+            );
+
+        }
+
+    );
+
+}
+
+
+function updateModeUI() {
+
+    const mode =
+        AI_MODES[
+            state.currentMode
+        ];
+
+
+    if (!mode) {
+
+        return;
+
+    }
+
+
+    if (
+        elements.currentModeName
+    ) {
+
+        elements.currentModeName.textContent =
+            mode.name;
+
+    }
+
+
+    if (
+        elements.currentModeDescription
+    ) {
+
+        elements.currentModeDescription.textContent =
+            mode.description;
+
+    }
+
+
+    elements.modeItems?.forEach(
+
+        item => {
+
+            item.classList.toggle(
+
+                "active",
+
+                item.dataset.mode ===
+                state.currentMode
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   26. SIDEBAR
+   ============================================================ */
+
+function initializeSidebar() {
+
+    if (
+        elements.sidebarToggle
+    ) {
+
+        elements.sidebarToggle.addEventListener(
+
+            "click",
+
+            () => {
+
+                toggleSidebar();
+
+            }
+
+        );
+
+    }
+
+
+    if (
+        elements.mobileMenuButton
+    ) {
+
+        elements.mobileMenuButton.addEventListener(
+
+            "click",
+
+            () => {
+
+                elements.sidebar
+                    ?.classList.toggle(
+                        "open"
+                    );
+
+            }
+
+        );
+
+    }
+
+}
+
+
+function toggleSidebar() {
+
+    state.isSidebarOpen =
+        !state.isSidebarOpen;
+
+
+    elements.sidebar
+        ?.classList.toggle(
+
+            "collapsed",
+
+            !state.isSidebarOpen
+
+        );
+
+}
+
+
+/* ============================================================
+   27. THEME
+   ============================================================ */
+
+function initializeTheme() {
+
+    const savedTheme =
+        localStorage.getItem(
+            CONFIG.themeKey
+        );
+
+
+    if (
+        savedTheme ===
+        "dark"
+    ) {
+
+        state.isDarkMode =
+            true;
+
+    }
+
 
     applyTheme();
 
@@ -782,323 +1936,192 @@ function toggleTheme() {
 
 function applyTheme() {
 
-    DOM.html.dataset.theme =
-        AppState.theme;
+    elements.html?.classList.toggle(
+
+        "dark",
+
+        state.isDarkMode
+
+    );
+
+
+    elements.body?.classList.toggle(
+
+        "dark-mode",
+
+        state.isDarkMode
+
+    );
+
 
     localStorage.setItem(
-        "ernurvynx_theme",
-        AppState.theme
+
+        CONFIG.themeKey,
+
+        state.isDarkMode
+            ? "dark"
+            : "light"
+
     );
 
-}
-
-
-/* =========================================================
-   14. LANGUAGE SYSTEM
-   ========================================================= */
-
-const translations = {
-
-    kz: {
-
-        home: "Басты бет",
-
-        about: "Біз туралы",
-
-        projects: "Жобалар",
-
-        contact: "Байланыс",
-
-        chat: "AI Көмекші",
-
-        send: "Жіберу",
-
-        welcome:
-            "ERNURVYNX AI жүйесіне қош келдіңіз!"
-
-    },
-
-    ru: {
-
-        home: "Главная",
-
-        about: "О нас",
-
-        projects: "Проекты",
-
-        contact: "Контакты",
-
-        chat: "AI Помощник",
-
-        send: "Отправить",
-
-        welcome:
-            "Добро пожаловать в ERNURVYNX AI!"
-
-    },
-
-    en: {
-
-        home: "Home",
-
-        about: "About",
-
-        projects: "Projects",
-
-        contact: "Contact",
-
-        chat: "AI Assistant",
-
-        send: "Send",
-
-        welcome:
-            "Welcome to ERNURVYNX AI!"
-
-    }
-
-};
-
-
-function initializeLanguageSwitcher() {
-
-    const languageButtons =
-        document.querySelectorAll(
-            "[data-language]"
-        );
-
-    languageButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const language =
-                        button.dataset.language;
-
-                    changeLanguage(
-                        language
-                    );
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-function changeLanguage(language) {
 
     if (
-        !translations[language]
-    ) return;
-
-    AppState.language =
-        language;
-
-    localStorage.setItem(
-        "ernurvynx_language",
-        language
-    );
-
-    applyLanguage();
-
-}
-
-
-function applyLanguage() {
-
-    const language =
-        translations[
-            AppState.language
-        ];
-
-    if (!language) return;
-
-    document
-        .querySelectorAll(
-            "[data-i18n]"
-        )
-        .forEach(
-            element => {
-
-                const key =
-                    element.dataset.i18n;
-
-                if (
-                    language[key]
-                ) {
-
-                    element.textContent =
-                        language[key];
-
-                }
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   15. SCROLL EFFECTS
-   ========================================================= */
-
-function initializeScrollEffects() {
-
-    window.addEventListener(
-        "scroll",
-        () => {
-
-            const scrollY =
-                window.scrollY;
-
-            if (DOM.navbar) {
-
-                if (scrollY > 50) {
-
-                    DOM.navbar.classList.add(
-                        "scrolled"
-                    );
-
-                } else {
-
-                    DOM.navbar.classList.remove(
-                        "scrolled"
-                    );
-
-                }
-
-            }
-
-            if (DOM.scrollTopButton) {
-
-                if (scrollY > 500) {
-
-                    DOM.scrollTopButton.classList.add(
-                        "visible"
-                    );
-
-                } else {
-
-                    DOM.scrollTopButton.classList.remove(
-                        "visible"
-                    );
-
-                }
-
-            }
-
-        }
-    );
-
-
-    if (DOM.scrollTopButton) {
-
-        DOM.scrollTopButton.addEventListener(
-            "click",
-            () => {
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   16. CONTACT FORM
-   ========================================================= */
-
-function initializeForms() {
-
-    if (DOM.contactForm) {
-
-        DOM.contactForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                const formData =
-                    new FormData(
-                        DOM.contactForm
-                    );
-
-                console.log(
-                    "Contact form:",
-                    Object.fromEntries(
-                        formData
-                    )
-                );
-
-                showNotification(
-                    "Хабарламаңыз сәтті жіберілді!",
-                    "success"
-                );
-
-                DOM.contactForm.reset();
-
-            }
-        );
-
-    }
-
-
-    if (DOM.newsletterForm) {
-
-        DOM.newsletterForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                showNotification(
-                    "Сіз жаңалықтарға жазылдыңыз!",
-                    "success"
-                );
-
-                DOM.newsletterForm.reset();
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   17. ANIMATIONS
-   ========================================================= */
-
-function initializeAnimations() {
-
-    const animatedElements =
-        document.querySelectorAll(
-            "[data-animation]"
-        );
-
-    if (
-        !("IntersectionObserver" in window)
+        elements.themeButton
     ) {
 
-        animatedElements.forEach(
-            element => {
+        elements.themeButton.textContent =
+            state.isDarkMode
+                ? "☀"
+                : "☾";
 
-                element.classList.add(
-                    "animated"
+    }
+
+}
+
+
+/* ============================================================
+   28. FILE UPLOAD
+   ============================================================ */
+
+function initializeFileUpload() {
+
+    if (
+        elements.attachButton &&
+        elements.fileInput
+    ) {
+
+        elements.attachButton.addEventListener(
+
+            "click",
+
+            () => {
+
+                elements.fileInput.click();
+
+            }
+
+        );
+
+    }
+
+
+    if (
+        elements.imageButton &&
+        elements.imageInput
+    ) {
+
+        elements.imageButton.addEventListener(
+
+            "click",
+
+            () => {
+
+                elements.imageInput.click();
+
+            }
+
+        );
+
+    }
+
+
+    elements.fileInput?.addEventListener(
+
+        "change",
+
+        event => {
+
+            const file =
+                event.target.files[0];
+
+
+            if (
+                file
+            ) {
+
+                handleFileSelection(
+                    file
                 );
 
             }
+
+        }
+
+    );
+
+
+    elements.imageInput?.addEventListener(
+
+        "change",
+
+        event => {
+
+            const file =
+                event.target.files[0];
+
+
+            if (
+                file
+            ) {
+
+                handleImageSelection(
+                    file
+                );
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   29. FILE SELECTION
+   ============================================================ */
+
+function handleFileSelection(
+    file
+) {
+
+    state.selectedFile =
+        file;
+
+
+    showFilePreview(
+        file
+    );
+
+
+    showNotification(
+
+        `${file.name} таңдалды`,
+
+        "success"
+
+    );
+
+}
+
+
+/* ============================================================
+   30. IMAGE SELECTION
+   ============================================================ */
+
+function handleImageSelection(
+    file
+) {
+
+    if (
+        !file.type.startsWith(
+            "image/"
+        )
+    ) {
+
+        showNotification(
+            "Бұл сурет файлы емес.",
+            "error"
         );
 
         return;
@@ -1106,86 +2129,828 @@ function initializeAnimations() {
     }
 
 
-    const observer =
-        new IntersectionObserver(
-            entries => {
+    state.selectedImage =
+        file;
 
-                entries.forEach(
-                    entry => {
 
-                        if (
-                            entry.isIntersecting
-                        ) {
+    showFilePreview(
+        file
+    );
 
-                            entry.target.classList.add(
-                                "animated"
-                            );
+}
 
-                            observer.unobserve(
-                                entry.target
-                            );
 
-                        }
+/* ============================================================
+   31. FILE PREVIEW
+   ============================================================ */
 
-                    }
-                );
+function showFilePreview(
+    file
+) {
 
-            },
-            {
-                threshold: 0.15
-            }
+    if (
+        !elements.filePreview
+    ) {
+
+        return;
+
+    }
+
+
+    elements.filePreview.innerHTML = `
+
+        <div class="selected-file">
+
+            <span>
+                ${escapeHTML(file.name)}
+            </span>
+
+            <button
+                type="button"
+                class="remove-file"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
+    elements.filePreview
+        .classList.add(
+            "active"
         );
 
 
-    animatedElements.forEach(
-        element => {
+    elements.filePreview
+        .querySelector(
+            ".remove-file"
+        )
+        .addEventListener(
 
-            observer.observe(
-                element
-            );
+            "click",
 
-        }
-    );
+            removeSelectedFile
+
+        );
 
 }
 
 
-/* =========================================================
-   18. PRELOADER
-   ========================================================= */
+/* ============================================================
+   32. REMOVE FILE
+   ============================================================ */
 
-function initializePreloader() {
+function removeSelectedFile() {
 
-    window.addEventListener(
-        "load",
+    state.selectedFile =
+        null;
+
+    state.selectedImage =
+        null;
+
+
+    if (
+        elements.filePreview
+    ) {
+
+        elements.filePreview.innerHTML =
+            "";
+
+        elements.filePreview
+            .classList.remove(
+                "active"
+            );
+
+    }
+
+
+    if (
+        elements.fileInput
+    ) {
+
+        elements.fileInput.value =
+            "";
+
+    }
+
+
+    if (
+        elements.imageInput
+    ) {
+
+        elements.imageInput.value =
+            "";
+
+    }
+
+}
+
+
+/* ============================================================
+   33. VOICE RECOGNITION
+   ============================================================ */
+
+function initializeVoiceRecognition() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (
+        !SpeechRecognition
+    ) {
+
+        console.warn(
+            "Speech Recognition is not supported."
+        );
+
+        return;
+
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        "kk-KZ";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        true;
+
+
+    recognition.onstart =
         () => {
 
-            setTimeout(
-                () => {
+            state.isRecording =
+                true;
 
-                    if (
-                        DOM.preloader
-                    ) {
 
-                        DOM.preloader.classList.add(
-                            "hidden"
-                        );
+            elements.voiceButton
+                ?.classList.add(
+                    "recording"
+                );
 
-                    }
+        };
 
-                },
-                500
+
+    recognition.onresult =
+        event => {
+
+            let transcript =
+                "";
+
+
+            for (
+                let i =
+                    event.resultIndex;
+
+                i <
+                event.results.length;
+
+                i++
+            ) {
+
+                transcript +=
+                    event.results[i][0]
+                        .transcript;
+
+            }
+
+
+            if (
+                elements.messageInput
+            ) {
+
+                elements.messageInput.value =
+                    transcript;
+
+                updateCharacterCounter();
+
+            }
+
+        };
+
+
+    recognition.onend =
+        () => {
+
+            state.isRecording =
+                false;
+
+
+            elements.voiceButton
+                ?.classList.remove(
+                    "recording"
+                );
+
+        };
+
+
+    recognition.onerror =
+        error => {
+
+            console.error(
+                "Voice error:",
+                error
             );
 
+
+            state.isRecording =
+                false;
+
+        };
+
+
+    if (
+        elements.voiceButton
+    ) {
+
+        elements.voiceButton.addEventListener(
+
+            "click",
+
+            () => {
+
+                if (
+                    state.isRecording
+                ) {
+
+                    recognition.stop();
+
+                } else {
+
+                    recognition.start();
+
+                }
+
+            }
+
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   34. SEARCH
+   ============================================================ */
+
+function initializeSearch() {
+
+    if (
+        elements.chatSearch
+    ) {
+
+        elements.chatSearch.addEventListener(
+
+            "input",
+
+            event => {
+
+                renderConversations(
+
+                    event.target.value
+
+                );
+
+            }
+
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   35. KEYBOARD SHORTCUTS
+   ============================================================ */
+
+function initializeKeyboardShortcuts() {
+
+    document.addEventListener(
+
+        "keydown",
+
+        event => {
+
+            if (
+                (event.ctrlKey ||
+                 event.metaKey) &&
+                event.key.toLowerCase() ===
+                "k"
+            ) {
+
+                event.preventDefault();
+
+                createNewConversation();
+
+            }
+
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                elements.sidebar
+                    ?.classList.remove(
+                        "open"
+                    );
+
+            }
+
         }
+
     );
 
 }
 
 
-/* =========================================================
-   19. NOTIFICATIONS
-   ========================================================= */
+/* ============================================================
+   36. INPUT KEYBOARD
+   ============================================================ */
+
+function handleInputKeydown(
+    event
+) {
+
+    if (
+        event.key ===
+        "Enter" &&
+        !event.shiftKey
+    ) {
+
+        event.preventDefault();
+
+        handleSendMessage();
+
+    }
+
+}
+
+
+/* ============================================================
+   37. INPUT CHANGE
+   ============================================================ */
+
+function handleInputChange() {
+
+    updateCharacterCounter();
+
+    autoResizeInput();
+
+}
+
+
+/* ============================================================
+   38. CHARACTER COUNTER
+   ============================================================ */
+
+function updateCharacterCounter() {
+
+    if (
+        !elements.messageInput ||
+        !elements.charCounter
+    ) {
+
+        return;
+
+    }
+
+
+    const length =
+        elements.messageInput
+            .value
+            .length;
+
+
+    elements.charCounter.textContent =
+
+        `${length} / ${CONFIG.maxMessageLength}`;
+
+}
+
+
+/* ============================================================
+   39. AUTO RESIZE INPUT
+   ============================================================ */
+
+function initializeAutoResize() {
+
+    if (
+        !elements.messageInput
+    ) {
+
+        return;
+
+    }
+
+
+    elements.messageInput.addEventListener(
+
+        "input",
+
+        autoResizeInput
+
+    );
+
+}
+
+
+function autoResizeInput() {
+
+    const input =
+        elements.messageInput;
+
+
+    if (!input) {
+
+        return;
+
+    }
+
+
+    input.style.height =
+        "auto";
+
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            180
+        ) + "px";
+
+}
+
+
+function resetInputHeight() {
+
+    if (
+        elements.messageInput
+    ) {
+
+        elements.messageInput.style.height =
+            "auto";
+
+    }
+
+}
+
+
+/* ============================================================
+   40. TYPING INDICATOR
+   ============================================================ */
+
+function showTypingIndicator() {
+
+    if (
+        elements.typingIndicator
+    ) {
+
+        elements.typingIndicator
+            .classList.add(
+                "active"
+            );
+
+    }
+
+}
+
+
+function hideTypingIndicator() {
+
+    if (
+        elements.typingIndicator
+    ) {
+
+        elements.typingIndicator
+            .classList.remove(
+                "active"
+            );
+
+    }
+
+}
+
+
+/* ============================================================
+   41. SEND BUTTON
+   ============================================================ */
+
+function updateSendButton() {
+
+    if (
+        !elements.sendButton
+    ) {
+
+        return;
+
+    }
+
+
+    elements.sendButton.disabled =
+        state.isGenerating;
+
+
+    if (
+        state.isGenerating
+    ) {
+
+        elements.sendButton.classList.add(
+            "loading"
+        );
+
+    } else {
+
+        elements.sendButton.classList.remove(
+            "loading"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   42. WELCOME SCREEN
+   ============================================================ */
+
+function showWelcomeScreen() {
+
+    elements.welcomeScreen
+        ?.classList.remove(
+            "hidden"
+        );
+
+}
+
+
+function hideWelcomeScreen() {
+
+    elements.welcomeScreen
+        ?.classList.add(
+            "hidden"
+        );
+
+}
+
+
+/* ============================================================
+   43. SCROLL CHAT
+   ============================================================ */
+
+function scrollChatToBottom() {
+
+    if (
+        !elements.chatMessages
+    ) {
+
+        return;
+
+    }
+
+
+    requestAnimationFrame(
+
+        () => {
+
+            elements.chatMessages.scrollTo({
+
+                top:
+                    elements.chatMessages
+                        .scrollHeight,
+
+                behavior:
+                    "smooth"
+
+            });
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   44. USER INTERFACE
+   ============================================================ */
+
+function updateUserInterface() {
+
+    updateModeUI();
+
+    updateSendButton();
+
+    updateCharacterCounter();
+
+
+    if (
+        elements.userName
+    ) {
+
+        elements.userName.textContent =
+            state.user.name;
+
+    }
+
+
+    if (
+        elements.userPlan
+    ) {
+
+        elements.userPlan.textContent =
+            state.user.plan;
+
+    }
+
+}
+
+
+/* ============================================================
+   45. USER ACTIONS
+   ============================================================ */
+
+function initializeUserActions() {
+
+    elements.themeButton?.addEventListener(
+
+        "click",
+
+        () => {
+
+            state.isDarkMode =
+                !state.isDarkMode;
+
+            applyTheme();
+
+        }
+
+    );
+
+
+    elements.emojiButton?.addEventListener(
+
+        "click",
+
+        () => {
+
+            insertEmoji(
+                "😊"
+            );
+
+        }
+
+    );
+
+
+    elements.searchButton?.addEventListener(
+
+        "click",
+
+        () => {
+
+            elements.chatSearch
+                ?.focus();
+
+        }
+
+    );
+
+
+    elements.settingsButton?.addEventListener(
+
+        "click",
+
+        () => {
+
+            showNotification(
+
+                "Баптаулар бөлімі жақында қосылады.",
+
+                "info"
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* ============================================================
+   46. INSERT EMOJI
+   ============================================================ */
+
+function insertEmoji(
+    emoji
+) {
+
+    if (
+        !elements.messageInput
+    ) {
+
+        return;
+
+    }
+
+
+    const start =
+        elements.messageInput
+            .selectionStart;
+
+
+    const end =
+        elements.messageInput
+            .selectionEnd;
+
+
+    const value =
+        elements.messageInput.value;
+
+
+    elements.messageInput.value =
+
+        value.substring(
+            0,
+            start
+        ) +
+
+        emoji +
+
+        value.substring(
+            end
+        );
+
+
+    elements.messageInput.focus();
+
+
+    elements.messageInput.selectionStart =
+        start +
+        emoji.length;
+
+
+    elements.messageInput.selectionEnd =
+        start +
+        emoji.length;
+
+
+    updateCharacterCounter();
+
+}
+
+
+/* ============================================================
+   47. COPY TO CLIPBOARD
+   ============================================================ */
+
+async function copyToClipboard(
+    text
+) {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+
+        showNotification(
+
+            "Көшірілді",
+
+            "success"
+
+        );
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   48. NOTIFICATION
+   ============================================================ */
 
 function showNotification(
     message,
@@ -1197,34 +2962,13 @@ function showNotification(
             "div"
         );
 
+
     notification.className =
-        `notification notification-${type}`;
+        `notification ${type}`;
 
-    notification.innerHTML = `
 
-        <div class="notification-content">
-
-            <span class="notification-icon">
-                ${
-                    type === "success"
-                        ? "✓"
-                        : type === "error"
-                            ? "!"
-                            : "i"
-                }
-            </span>
-
-            <span>
-                ${escapeHTML(message)}
-            </span>
-
-        </div>
-
-        <button class="notification-close">
-            ×
-        </button>
-
-    `;
+    notification.textContent =
+        message;
 
 
     document.body.appendChild(
@@ -1233,6 +2977,7 @@ function showNotification(
 
 
     requestAnimationFrame(
+
         () => {
 
             notification.classList.add(
@@ -1240,74 +2985,59 @@ function showNotification(
             );
 
         }
-    );
 
-
-    const closeButton =
-        notification.querySelector(
-            ".notification-close"
-        );
-
-
-    closeButton.addEventListener(
-        "click",
-        () => {
-
-            removeNotification(
-                notification
-            );
-
-        }
     );
 
 
     setTimeout(
+
         () => {
 
-            removeNotification(
-                notification
+            notification.classList.remove(
+                "show"
             );
 
-        },
-        4000
-    );
-
-}
-
-
-function removeNotification(
-    notification
-) {
-
-    notification.classList.remove(
-        "show"
-    );
-
-    setTimeout(
-        () => {
-
-            notification.remove();
-
-        },
-        300
-    );
-
-}
-
-
-/* =========================================================
-   20. UTILITY FUNCTIONS
-   ========================================================= */
-
-function delay(ms) {
-
-    return new Promise(
-        resolve => {
 
             setTimeout(
-                resolve,
-                ms
+
+                () => {
+
+                    notification.remove();
+
+                },
+
+                300
+
             );
+
+        },
+
+        3000
+
+    );
+
+}
+
+
+/* ============================================================
+   49. FORMAT TIME
+   ============================================================ */
+
+function formatTime(
+    timestamp
+) {
+
+    return new Date(
+        timestamp
+    ).toLocaleTimeString(
+        "kk-KZ",
+        {
+
+            hour:
+                "2-digit",
+
+            minute:
+                "2-digit"
 
         }
     );
@@ -1315,18 +3045,57 @@ function delay(ms) {
 }
 
 
-function containsAny(
-    text,
-    words
-) {
+/* ============================================================
+   50. GENERATE ID
+   ============================================================ */
 
-    return words.some(
-        word =>
-            text.includes(word)
+function generateId() {
+
+    return (
+
+        Date.now()
+            .toString(
+                36
+            ) +
+
+        Math.random()
+            .toString(
+                36
+            )
+            .substring(
+                2,
+                9
+            )
+
     );
 
 }
 
+
+/* ============================================================
+   51. USER INITIAL
+   ============================================================ */
+
+function getUserInitial() {
+
+    return (
+
+        state.user.name
+            ?.charAt(
+                0
+            )
+            ?.toUpperCase()
+
+        || "U"
+
+    );
+
+}
+
+
+/* ============================================================
+   52. ESCAPE HTML
+   ============================================================ */
 
 function escapeHTML(
     text
@@ -1337,104 +3106,91 @@ function escapeHTML(
             "div"
         );
 
+
     div.textContent =
         text;
+
 
     return div.innerHTML;
 
 }
 
 
-function getCurrentTime() {
+/* ============================================================
+   53. ESCAPE ATTRIBUTE
+   ============================================================ */
 
-    return new Date()
-        .toLocaleTimeString(
-            "kk-KZ",
-            {
-                hour: "2-digit",
-                minute: "2-digit"
-            }
-        );
-
-}
-
-
-function formatTime(
-    timestamp
+function escapeAttribute(
+    text
 ) {
 
-    return new Date(
-        timestamp
+    return escapeHTML(
+        text
     )
-        .toLocaleTimeString(
-            "kk-KZ",
-            {
-                hour: "2-digit",
-                minute: "2-digit"
-            }
+        .replace(
+            /"/g,
+            "&quot;"
         );
 
 }
 
 
-function updateCurrentYear() {
+/* ============================================================
+   54. GLOBAL API
+   ============================================================ */
 
-    document
-        .querySelectorAll(
-            "[data-year]"
-        )
-        .forEach(
-            element => {
+window.ARUZHAN_AI = {
 
-                element.textContent =
-                    new Date().getFullYear();
+    sendMessage:
+        handleSendMessage,
+
+    newChat:
+        createNewConversation,
+
+    loadChat:
+        loadConversation,
+
+    setMode:
+        mode => {
+
+            if (
+                AI_MODES[mode]
+            ) {
+
+                state.currentMode =
+                    mode;
+
+                updateModeUI();
 
             }
-        );
 
-}
+        },
 
+    getState:
+        () => ({
+            ...state
+        }),
 
-/* =========================================================
-   21. GLOBAL API
-   ========================================================= */
-
-window.ERNURVYNX = {
-
-    openChat,
-
-    closeChat,
-
-    sendMessage,
-
-    changeLanguage,
-
-    toggleTheme,
-
-    showNotification,
-
-    getState: () => ({
-        ...AppState
-    })
+    copy:
+        copyToClipboard
 
 };
 
 
-/* =========================================================
-   22. DEVELOPMENT LOG
-   ========================================================= */
+/* ============================================================
+   55. DEBUG
+   ============================================================ */
 
 console.log(
-    "ERNURVYNX AI application initialized successfully."
+    "ARUZHAN AI frontend engine ready."
 );
 
 console.log(
-    "Current language:",
-    AppState.language
+    "Current mode:",
+    state.currentMode
 );
 
 console.log(
-    "Current theme:",
-    AppState.theme
+    "AI endpoint:",
+    CONFIG.apiEndpoint
 );
-```
