@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARUZHAN AI — Cloud & Messenger Platform</title>
+    <title>ARUZHAN AI — Заманауи AI Серік & Коммуникация</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -44,7 +44,7 @@
             backdrop-filter: blur(20px);
         }
 
-        /* Sidebar (Telegram / Cloud Panel style) */
+        /* Sidebar */
         .sidebar {
             width: 320px;
             background: var(--sidebar-bg);
@@ -109,18 +109,12 @@
             border-radius: 14px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: 0.2s;
             margin-bottom: 10px;
         }
 
         .chat-item.active {
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(99, 102, 241, 0.15));
             border-color: rgba(236, 72, 153, 0.4);
-        }
-
-        .chat-item:hover {
-            background: rgba(255, 255, 255, 0.08);
         }
 
         .item-icon {
@@ -208,22 +202,6 @@
             align-items: center;
         }
 
-        .mode-btn {
-            background: rgba(236, 72, 153, 0.15);
-            color: #f472b6;
-            border: 1px solid rgba(236, 72, 153, 0.3);
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .mode-btn:hover {
-            background: rgba(236, 72, 153, 0.3);
-        }
-
         select {
             background: #0f172a;
             color: var(--text-main);
@@ -233,41 +211,6 @@
             font-size: 0.82rem;
             outline: none;
             cursor: pointer;
-        }
-
-        /* Voice Bar */
-        .voice-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 24px;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .voice-btn-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .ctrl-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 5px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .ctrl-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
         }
 
         /* Chat Window */
@@ -295,12 +238,13 @@
             padding: 14px 18px;
             border-radius: 18px;
             font-size: 0.92rem;
-            line-height: 1.5;
+            line-height: 1.6;
             position: relative;
+            white-space: pre-wrap;
         }
 
         .bot .bubble {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(30, 41, 59, 0.85);
             border: 1px solid var(--border-color);
             border-top-left-radius: 4px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -351,7 +295,7 @@
             color: white;
         }
 
-        /* Input Area (Telegram style) */
+        /* Input Area */
         .chat-footer {
             padding: 16px 24px;
             background: rgba(15, 23, 42, 0.95);
@@ -406,6 +350,16 @@
         }
 
         .send-btn:hover { background: #db2777; }
+
+        /* Voice helper indicator */
+        .voice-hint {
+            font-size: 0.72rem;
+            color: #f472b6;
+            margin-bottom: 6px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
 
         /* Modal Box */
         .modal {
@@ -481,33 +435,24 @@
 <body>
 
 <div class="app-container">
-    <!-- Sidebar / Navigation -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <div class="sidebar-header">
-                <div class="logo-box"><i class="fa-solid fa-cloud-bolt"></i></div>
+                <div class="logo-box"><i class="fa-solid fa-sparkles"></i></div>
                 <div class="logo-text">
                     <h2>ARUZHAN AI</h2>
-                    <p>Cloud AI Assistant</p>
+                    <p>AI Серік & Көмекші</p>
                 </div>
             </div>
 
             <div class="sidebar-menu">
-                <div class="menu-title">Белсенді чаттар</div>
+                <div class="menu-title">Белсенді чат</div>
                 <div class="chat-item active">
-                    <div class="item-icon"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="item-icon"><i class="fa-solid fa-comments"></i></div>
                     <div class="item-info">
                         <h4>ARUZHAN AI ✨</h4>
-                        <p id="sideStatus">💖 AI Серік & Танысу</p>
-                    </div>
-                </div>
-
-                <div class="menu-title">Жоба мүмкіндіктері</div>
-                <div class="chat-item" onclick="toggleMode()">
-                    <div class="item-icon"><i class="fa-solid fa-building-columns"></i></div>
-                    <div class="item-info">
-                        <h4>Ұлттық Жоба</h4>
-                        <p>Ресми қолдау стандарты</p>
+                        <p>💖 Қарым-қатынас & AI Кеңесші</p>
                     </div>
                 </div>
             </div>
@@ -527,13 +472,12 @@
             <div class="active-user-info">
                 <div class="status-dot"></div>
                 <div>
-                    <h3 id="mainTitle">ARUZHAN AI ✨</h3>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="modeStatus">💖 AI Серік & Танысу</span>
+                    <h3>ARUZHAN AI ✨</h3>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">💖 AI Серік & Заманауи Көмекші</span>
                 </div>
             </div>
 
             <div class="header-controls">
-                <button class="mode-btn" onclick="toggleMode()" id="modeBtn">🏛️ Ұлттық Жоба</button>
                 <select id="langSelect" onchange="changeLang()">
                     <option value="kk">ҚАЗ</option>
                     <option value="ru">РУС</option>
@@ -542,39 +486,38 @@
             </div>
         </div>
 
-        <!-- Voice Panel -->
-        <div class="voice-controls">
-            <span id="voiceStatus">🎙️ Дауыс: Тек басқанда белсенді болады</span>
-            <div class="voice-btn-group">
-                <button class="ctrl-btn" onclick="stopSpeech()"><i class="fa-solid fa-volume-xmark"></i> Дыбысты өшіру</button>
-                <button class="ctrl-btn" onclick="repeatLastSpeech()"><i class="fa-solid fa-rotate-right"></i> Қайталап оқу</button>
-            </div>
-        </div>
-
         <!-- Chat Messages -->
         <div class="chat-body" id="chatBody">
             <div class="msg-row bot">
                 <div class="bubble" id="welcomeMsg">
-                    Армысың, бауырым! Мен **ARUZHAN AI**-мын ✨
-                    <br><br>
-                    Бұл жоба маған үлкен жігер мен шабыт берген, қиын сәттерде қолдап, сенім білдірген **алтын досым Аружанның құрметіне** арналып жасалды!
-                    <br><br>
-                    Қыздармен сөйлесуден толқысаң, не деп жазарыңды білмей қиналсаң немесе сырласатын дос іздесең — мен әрдайым қасыңдамын! Жоғарыдағы **«Ұлттық Жоба»** батырмасын басып, мемлекеттік бағдарлама форматына да өте аласың.
+Армысың, бауырым! Мен **ARUZHAN AI**-мын ✨
+
+Бұл жоба маған үлкен жігер мен шабыт берген, қиын сәттерде қолдап, сенім білдірген **алтын досым Аружанның құрметіне** арналып жасалды!
+
+Қыздармен сөйлесуде не деп жазарыңды білмей қиналсаң, қарым-қатынас мәселесі болса немесе жалпы кез келген тақырыпта ақыл-кеңес керек болса — маған емін-еркін сұрақ қоя бер! Мен саған заманауи, шынайы әрі тиімді жауап беруге дайынмын.
                     <span class="time" id="initTime"></span>
                 </div>
             </div>
         </div>
 
         <!-- Quick Chips -->
-        <div class="quick-chips" id="quickChips"></div>
+        <div class="quick-chips" id="quickChips">
+            <div class="chip" onclick="sendQuick('Қызға бірінші болып не деп жазсам болады?')">💌 Алғашқы хабарлама жазу</div>
+            <div class="chip" onclick="sendQuick('Қызды кездесуге қалай шақырамын?')">☕ Кездесуге шақыру тактикасы</div>
+            <div class="chip" onclick="sendQuick('Сапалы әрі әдемі комплимент айтуды үйретші')">💖 Комплимент шеберлігі</div>
+            <div class="chip" onclick="sendQuick('Қыздармен сөйлескендегі қорқыныш пен ұяңдықты қалай жеңуге болады?')">🔥 Өзіне сенімділік</div>
+        </div>
 
-        <!-- Input Box -->
+        <!-- Input Area -->
         <div class="chat-footer">
+            <div class="voice-hint" id="voiceHint">
+                <i class="fa-solid fa-microphone"></i> Дауысыңды тыңдап жатырмын... Сөйлеңіз!
+            </div>
             <div class="input-box">
-                <button class="icon-btn" id="micBtn" onclick="toggleVoice()" title="Тек басқанда тыңдайды">
+                <button class="icon-btn" id="micBtn" onclick="toggleVoiceInput()" title="Дауыспен мәтін жазу (Сөйлеңіз)">
                     <i class="fa-solid fa-microphone"></i>
                 </button>
-                <input type="text" id="userInput" placeholder="Хабарлама жазыңыз..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="userInput" placeholder="Хабарламаңызды немесе сұрағыңызды жазыңыз..." onkeypress="handleKeyPress(event)">
                 <button class="icon-btn send-btn" onclick="sendMessage()">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -589,9 +532,9 @@
         <span class="close-modal" onclick="closeModal()">&times;</span>
         <h2><i class="fa-solid fa-heart"></i> ARUZHAN AI Жобасы туралы</h2>
         
-        <p><strong>🎯 Жобаның басты мақсаты:</strong> Бойдақ, ұяң әрі коммуникацияда қиналатын жігіттерге психологиялық, моральдық және жасанды интеллект арқылы сөйлесу дағдыларын үйрету. Сондай-ақ мемлекеттік жастар саясаты мен әлеуметтік бағдарламаларды заманауи форматта түсіндіру.</p>
+        <p><strong>🎯 Жобаның басты мақсаты:</strong> Бойдақ, ұяң немесе коммуникацияда қиналатын жігіттерге заманауи психология, дұрыс қарым-қатынас ережелері мен жасанды интеллект арқылы сөйлесу дағдыларын дамытуға көмектесу.</p>
         
-        <p><strong>💻 Бұл веб-сайт қалай жасалды?</strong> Сайт заманауи <i>HTML5, CSS3 Glassmorphism UI</i> және <i>JavaScript (Web Speech API)</i> технологиялары арқылы толығымен 1 автономды файлда құрастырылды. Жасанды интеллект дауыстық тану және мәтінді дыбыстау мүмкіндігімен жабдықталған.</p>
+        <p><strong>💻 Бұл веб-сайт қалай жасалды?</strong> Сайт заманауи <i>HTML5, CSS3 Glassmorphism UI</i> және <i>JavaScript (Web Speech API)</i> технологиялары арқылы толығымен 1 автономды файлда құрастырылды. Дауысты мәтінге айналдырып жазу жүйесімен енгізілген.</p>
 
         <div class="thanks-box">
             <strong>🌸 Аружан досыма арнайы алғыс:</strong><br>
@@ -603,107 +546,50 @@
 <script>
     document.getElementById('initTime').innerText = getTime();
 
-    let currentMode = 'dating'; 
     let isListening = false;
     let recognition;
-    let lastBotReply = "";
 
-    // Web Speech API
+    // Web Speech API - Voice-to-Text ONLY
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
-        recognition.continuous = false; 
+        recognition.continuous = false;
+        recognition.interimResults = false;
 
         recognition.onresult = function(e) {
-            document.getElementById('userInput').value = e.results[0][0].transcript;
-            stopListening();
-            sendMessage();
+            const transcript = e.results[0][0].transcript;
+            document.getElementById('userInput').value = transcript;
+            stopVoiceInput();
+            sendMessage(); // Автоматты түрде жіберу
         };
 
-        recognition.onerror = function() { stopListening(); };
-        recognition.onend = function() { stopListening(); };
+        recognition.onerror = function() { stopVoiceInput(); };
+        recognition.onend = function() { stopVoiceInput(); };
     }
 
-    function toggleVoice() {
-        if (!recognition) return alert('Браузеріңіз дауыспен енгізуді қолдамайды.');
+    function toggleVoiceInput() {
+        if (!recognition) return alert('Браузеріңіз дауыспен жазуды қолдамайды.');
         if (!isListening) {
-            startListening();
+            startVoiceInput();
         } else {
-            stopListening();
+            stopVoiceInput();
         }
     }
 
-    function startListening() {
+    function startVoiceInput() {
         const lang = document.getElementById('langSelect').value;
         recognition.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
         recognition.start();
         isListening = true;
         document.getElementById('micBtn').classList.add('mic-active');
-        document.getElementById('voiceStatus').innerText = "🎙️ AI сені тыңдап тұр... Айта бер!";
+        document.getElementById('voiceHint').style.display = 'flex';
     }
 
-    function stopListening() {
+    function stopVoiceInput() {
         if (recognition && isListening) recognition.stop();
         isListening = false;
         document.getElementById('micBtn').classList.remove('mic-active');
-        document.getElementById('voiceStatus').innerText = "🎙️ Дауыс: Тек басқанда белсенді болады";
-    }
-
-    function stopSpeech() {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    }
-
-    function repeatLastSpeech() {
-        if (lastBotReply !== "") speak(lastBotReply);
-    }
-
-    function renderChips() {
-        const container = document.getElementById('quickChips');
-        if (currentMode === 'dating') {
-            container.innerHTML = `
-                <div class="chip" onclick="sendQuick('Қызға бірінші болып не деп жазсам болады?')">💌 Алғашқы хабарлама шаблоны</div>
-                <div class="chip" onclick="sendQuick('Қызды кездесуге қалай тартымды шақырамын?')">☕ Кездесуге шақыру тактикасы</div>
-                <div class="chip" onclick="sendQuick('Маған мықты комплимент айтуды үйретші')">💖 Комплимент шеберлігі</div>
-                <div class="chip" onclick="sendQuick('Қыздармен сөйлескендегі қорқынышты қалай жеңемін?')">🔥 Сенімділік формуласы</div>
-            `;
-        } else {
-            container.innerHTML = `
-                <div class="chip" onclick="sendQuick('Жігіттерді қолдау ұлттық бағдарламасы деген не?')">🏛️ Ұлттық Жоба мақсаты</div>
-                <div class="chip" onclick="sendQuick('Бойдақ жігіттерге мемлекеттік әлеуметтік көмектер')">🏠 Баспана және гранттар</div>
-                <div class="chip" onclick="sendQuick('Ұяңдық пен коммуникацияны дамыту регламенті')">🎯 Психологиялық реабилитация</div>
-                <div class="chip" onclick="sendQuick('Отбасын құруды ынталандыру мемлекеттік стандарты')">💍 Отбасылық қолдау</div>
-            `;
-        }
-    }
-
-    renderChips();
-
-    function toggleMode() {
-        stopSpeech();
-        const status = document.getElementById('modeStatus');
-        const sideStatus = document.getElementById('sideStatus');
-        const modeBtn = document.getElementById('modeBtn');
-
-        if (currentMode === 'dating') {
-            currentMode = 'gov';
-            status.innerText = "🏛️ Жігіттерді Қолдау Ұлттық Жобасы";
-            sideStatus.innerText = "🏛️ Ұлттық Жоба";
-            status.style.color = "#818cf8";
-            modeBtn.innerText = "💖 AI Серік Режимі";
-            const msg = "🏛️ **Режим Ауысты:** 'Жігіттерді коммуникациялық және әлеуметтік қолдау' ұлттық мемлекеттік концепциясына қош келдіңіз! Бұл бағдарлама — бойдақ, ұяң, қыздармен тіл табысуда қиналатын азаматтарға кешенді әлеуметтік, психологиялық және коммуникациялық көмек беру стандарты болып табылады.";
-            addMessage(msg, 'bot');
-            speak(msg);
-        } else {
-            currentMode = 'dating';
-            status.innerText = "💖 AI Серік & Танысу";
-            sideStatus.innerText = "💖 AI Серік & Танысу";
-            status.style.color = "#ec4899";
-            modeBtn.innerText = "🏛️ Ұлттық Жоба";
-            const msg = "💖 **Режим Ауысты!** Мен қайтадан ARUZHAN AI — сенің жеке кеңесшіңмін. Аружан сыйлаған шабыттың арқасында мен саған барынша сапалы көмек беруге дайынмын! Не талқылаймыз?";
-            addMessage(msg, 'bot');
-            speak(msg);
-        }
-        renderChips();
+        document.getElementById('voiceHint').style.display = 'none';
     }
 
     function sendMessage() {
@@ -716,10 +602,8 @@
 
         setTimeout(() => {
             const reply = getAIResponse(text);
-            lastBotReply = reply;
             addMessage(reply, 'bot');
-            speak(reply);
-        }, 600);
+        }, 500);
     }
 
     function sendQuick(text) {
@@ -752,55 +636,50 @@
         if (e.key === 'Enter') sendMessage();
     }
 
-    function speak(text) {
-        stopSpeech();
-        if ('speechSynthesis' in window) {
-            let cleanText = text.replace(/\*\*/g, '').replace(/<[^>]*>?/gm, '');
-            const ut = new SpeechSynthesisUtterance(cleanText);
-            const lang = document.getElementById('langSelect').value;
-            ut.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
-            ut.rate = 0.95;
-            window.speechSynthesis.speak(ut);
-        }
-    }
-
+    // Миға қонымды, терең әрі заманауи AI логикасы
     function getAIResponse(msg) {
         const t = msg.toLowerCase();
 
-        if (t.includes('аружан') || t.includes('рахмет')) {
-            return "**Аружанға арнайы:**\n\nАружан сияқты адал, қолдаушы досыңның болғаны — шын мәнінде үлкен бақыт! Оның сенімі мен қолдауы сені осындай заманауи жобаны жасауға жігерлендірді. Аружанға үлкен рахмет! 🌸";
+        // 1. Аружан немесе Алғыс тақырыбы
+        if (t.includes('аружан') || t.includes('рахмет') || t.includes('спасибо')) {
+            return "**Аружан досымызға мың алғыс! 🌸**\n\nАдамның өмірінде дұрыс бағыт беріп, сенім білдіретін Аружан сияқты адал достардың болғаны — шын мәнінде үлкен сый. Оның берген шабыты мен мотивациясы осы AI жобаның өмірге келуіне себеп болды.\n\nЕгер саған да қарым-қатынаста немесе өмірде қолдау керек болса, мен әрдайым көмектесуге дайынмын!";
         }
 
-        if (currentMode === 'dating') {
-            if (t.includes('жазсам') || t.includes('бірінші') || t.includes('таныс') || t.includes('шаблон')) {
-                return "**Алғашқы қадам жасау тактикасы:**\n\nБауырым, ешқашан стандартты 'Сәлем, қалайсың?' деп жазба. Бұл зеріктіреді. Ең тиімдісі — **Сұрақ + Комплимент** әдісі.\n\n**Сценарий 1 (Сторисіне жазу):** 'Мына жердің атмосферасы керемет екен! Бұл қай кафе? Сенің талғамың өте жоғары екен 🌟'\n\n**Сценарий 2 (Профиль суретіне жазу):** 'Сенің мына суретіңнен ерекше бір позитивті энергия сезіледі екен. Күнің сәтті өтсің!'\n\nЕсіңде болсын: Табиғи бол әрі жауапты ұзақ күтсең де, қысылма!";
-            } else if (t.includes('кездесу') || t.includes('шақыру')) {
-                return "**Кездесуге шақырудың алтын ережесі:**\n\nЕшқашан 'Бірде бос болсаң серуендейікші' деп белгісіз сөйлеме. Сенімді азамат нақты ұсыныс жасайды!\n\n**Керемет үлгі:** 'Сәлем! Бейсенбіде сағат 19:00-де менің сүйікті кофеханамда дәмді десерт ішіп, жақсылап сөйлесейік. Сені кім жеткізіп тастасын немесе қай жерден күтіп алайын?'\n\nБұл сөзден сенің жауапкершілігің мен сенімділігің айқын көрінеді!";
-            } else if (t.includes('комплимент')) {
-                return "**Шебер комплимент құпиясы:**\n\nҚыздар өздеріне айтылған әрбір сөздің шынайылығын бірден сезеді. Тек 'әдемісің' дей бермей, оның **детальдарына** назар аудар:\n\n1. 'Сенің дауысың өте жағымды екен, тыңдай бергім келеді.'\n2. 'Сенің күлкің айналаның бәрін жарық қылып жибереді екен!'\n3. 'Сенің ойлау жүйең мен стилің маған қатты ұнайды, өте ерекшесің.'";
-            } else if (t.includes('сенім') || t.includes('қорқыныш') || t.includes('ұяң')) {
-                return "**Өзіңе сенімділікті арттыру:**\n\nЕсіңде болсын: Қыз баласы да сен сияқты адам. Ол да толқыйды, ол да жақсы қарым-қатынасты қалайды! Сен өзіңді төмен ұстама. Иығыңды тік ұста, терең тыныс ал және іштей 'Мен өзіме сенімдімін, мен қызықты азаматпын' деп қайтала. Тәжірибе жинаған сайын бұл қорқыныш мүлдем жойылады!";
-            } else {
-                return "Бауырым, сені өте жақсы түсініп тұрмын! Сенің бойыңда Аружан сенгендей үлкен потенциал бар. Алаңдамай сұрағыңды қоя бер, мен әрдайым дұрыс бағыт беремін 💖";
-            }
-        } else {
-            // Мемлекеттік Ұлттық Жоба Режимі
-            if (t.includes('ұлттық жоба') || t.includes('бағдарлама') || t.includes('деген не')) {
-                return "**«Жігіттерді Коммуникациялық Қолдау» Ұлттық Концепциясы:**\n\nБұл — елдегі жас азаматтардың әлеуметтік-психологиялық жағдайын жақсартуға, ұяңдықты еңсеруге және салауатты отбасылық құндылықтарды қалыптастыруға арналған **Ресми AI-Бағдарлама**.\n\n**Негізгі бағыттар:**\n1. Социофобия мен ұяңдықты жою;\n2. Отбасын құру мәдениетін ынталандыру;\n3. Коммуникативті интеллектуалды дамыту.";
-            } else if (t.includes('баспана') || t.includes('грант') || t.includes('көмек')) {
-                return "**Жас Отбасылар мен Азаматтарға Мемлекеттік Жеңілдіктер:**\n\nҰлттық бағдарлама шеңберінде жас жігіттерге арналған келесі мемлекеттік қолдау тетіктері қарастырылған:\n\n• **'Отбасы Банк' жеңілдетілген 2% және 5% тұрғын үй заемы;**\n• **Жас кәсіпкерлерге арналған қайтарымсыз гранттар;**\n• **Жұмысшы жастарға жалға берілетін баспана бағдарламасы.**";
-            } else {
-                return "ҚР Мемлекеттік Жастар Саясатының нормативтік стандарты аясында сұранысыңыз өңделді. Азаматтарды әлеуметтік және психологиялық қолдау бойынша кез келген ресми ақпаратты алуға болады.";
-            }
+        // 2. Қызға бірінші жазу / Танысу
+        if (t.includes('жазсам') || t.includes('бірінші') || t.includes('таныс') || t.includes('шаблон') || t.includes('не жазайын')) {
+            return "**Қызға бірінші болып жазудың ең өтімді Заманауи Тектикасы:**\n\n❌ **Бұлай жазба:** 'Сәлем, қалайсың?', 'Танысайықшы' (Бұл зеріктіреді, қыздар күнде ондай 50 хабарлама алады).\n\n✅ **Бұлай жаз (Байқағыштық + Сұрақ):**\n1. **Сторисіне жауап беру:** 'Мына жердің эстетикасы керемет екен! Бұл қай кафе? Сенің талғамың өте жоғары екен ☕'\n2. **Қызығушылығы арқылы:** 'Музыкаңнан талғамың ерекше екені көрініп тұр. Мына тректің аты қалай?'\n3. **Жеңіл юмор:** 'Суретіңе қарап, саған кофеге қарағанда матча өте ұнайтын сияқты, қателеспедім бе? 😃'\n\n💡 **Басты құпия:** Қызға сұрақ қой, сонда ол жауап беруге мәжбүр болады!";
         }
+
+        // 3. Кездесуге шақыру
+        if (t.includes('кездесу') || t.includes('шақыру') || t.includes('свидание')) {
+            return "**Қызды кездесуге батыл әрі тартымды шақыру:**\n\nБауырым, 'Қашан бос боласың?', 'Серуендейміз бе бір күні?' деп белгісіз сөйлеме. Нақтылық — ер азаматтың ең тартымды қасиеті.\n\n**Дайын сценарий:**\n'Сәлем! Жұма күні кешке сағат 19:00-де [Кафе аты] деген жерде өте дәмді кофе мен десерт ішейік. Сені қай жерден күтіп алайын немесе такси жіберейін?'\n\n**Неге бұл жұмыс істейді?**\n• Сен нақты уақыт пен орынды ұсындың.\n• Сен оның жайлылығын ойлап тұрсың (такси/күтіп алу).\n• Егер ол жұмада бос болмаса, өзі басқа күнді ұсынады!";
+        }
+
+        // 4. Комплимент
+        if (t.includes('комплимент') || t.includes('мақтау') || t.includes('әдемі')) {
+            return "**Шебер Комплимент — Топ 3 Формула:**\n\nАрзан әрі жалпылама мақтауларды ұмыт ('сен сұлусың' т.б.). Детальдарға назар аудар:\n\n1. **Мінезі мен Энергиясына:** 'Сенімен сөйлескенде айналаның бәрі позитивке толатын сияқты, вайбың өте жағымды ✨'\n2. **Стилі мен Талғамына:** 'Сенің киім киіну стилің мен түстерді үйлестіруің өте жоғары деңгейде екен.'\n3. **Дауысы мен Күлкісіне:** 'Сенің күлкің адамның көңіл-күйін бірден көтеріп жібереді екен!'";
+        }
+
+        // 5. Қорқыныш / Ұяңдық / Сенімділік
+        if (t.includes('сенім') || t.includes('қорқыныш') || t.includes('ұяң') || t.includes('страх') || t.includes('стесняюсь')) {
+            return "**Қыздармен сөйлесудегі қорқынышты жеңу:**\n\n1. **Психологиялық шындық:** Қыздар да сен сияқты қарапайым адам. Олар да толқыйды, олар да біреудің бірінші болып қадам жасағанын күтеді.\n2. **Отказ (бас тарту) — трагедия емес:** Егер қыз жауап бермесе, ол сенің жаман екеніңді білдірмейді. Бәлкім оның жігіті бар немесе көңіл-күйі жоқ.\n3. **Дене тілі:** Сөйлескенде иығыңды тік ұста, көзіне қарап сөйле. Денең сенімді болса, миың да автоматты түрде сенімді болады!";
+        }
+
+        // 6. Сөйлесуді жалғастыру / Тема табу
+        if (t.includes('тема') || t.includes('сөз') || t.includes('әңгіме') || t.includes('зерігіп') || t.includes('тоқтап')) {
+            return "**Әңгіме тоқтап қалса, не туралы сөйлесуге болады?**\n\n• **Саяхат & Армандар:** 'Осы уақытқа дейін барған ең ерекше жерің қайсы?'\n• **Тамақ & Кино:** 'Демалыста көруге қандай топ фильм ұсынасың?'\n• **Балалық шақ:** 'Бала кезде кім болуды армандаушы едің?'\n• **Сұрақ-Ойын:** 'Егер саған 1 миллион доллар берсе, ең бірінші не алар едің?'";
+        }
+
+        // 7. Басқа кез келген сұрақтарға (Еркін ЖИ жауабы)
+        return `**Сіздің сұрағыңыз бойынша:**\n\n"${msg}" — бұл өте орынды әрі қызықты сұрақ!\n\nЗаманауи қарым-қатынас пен психология тұрғысынан қарасақ, ең бастысы — ШЫНАЙЫЛЫҚ пен СЕНІМДІЛІК. Өзіңді біреуге ұнау үшін басқа адам етіп көрсетудің қажеті жоқ. \n\nЕгер осы сұрақ бойынша нақтырақ әрекет алгоритмі керек болса немесе басқа қырынан талқылағың келсе, маған сұрағыңды егжей-тегжейлі жаза бер! Мен әрдайым көмектесуге дайынмын. ✨`;
     }
 
     function changeLang() {
         const lang = document.getElementById('langSelect').value;
         const input = document.getElementById('userInput');
-        if (lang === 'ru') input.placeholder = "Введите сообщение...";
-        else if (lang === 'en') input.placeholder = "Type your message...";
-        else input.placeholder = "Хабарлама жазыңыз...";
+        if (lang === 'ru') input.placeholder = "Введите сообщение или вопрос...";
+        else if (lang === 'en') input.placeholder = "Type your message or question...";
+        else input.placeholder = "Хабарламаңызды немесе сұрағыңызды жазыңыз...";
     }
 
     function openModal() {
