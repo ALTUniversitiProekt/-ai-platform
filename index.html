@@ -1,73 +1,581 @@
 <!DOCTYPE html>
 <html lang="kk">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <meta
         name="description"
-        content="ARUZHAN AI — интеллектуалды AI Companion. Сөйлесіңіз, үйреніңіз, жасаңыз және күнделікті тапсырмаларды AI көмегімен орындаңыз."
+        content="ARUZHAN AI — заманауи жасанды интеллект көмекшісі"
     >
 
     <meta
-        name="keywords"
-        content="ARUZHAN AI, AI, artificial intelligence, chatbot, AI companion, қазақша AI"
+        name="theme-color"
+        content="#09090f"
     >
 
-    <meta name="theme-color" content="#08090d">
-
-    <title>ARUZHAN AI — Your Intelligent AI Companion</title>
-
-    <!-- =========================
-         GOOGLE FONTS
-    ========================== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>
+        ARUZHAN AI
+    </title>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
+        href="style.css"
     >
 
-    <!-- =========================
-         ICONS
-    ========================== -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
-
-    <!-- =========================
-         MAIN CSS
-    ========================== -->
-    <link rel="stylesheet" href="style.css">
 </head>
+
 
 <body>
 
-<!-- =========================================================
-     APPLICATION ROOT
-========================================================= -->
-
-<div id="app" class="app">
-
     <!-- =====================================================
-         GLOBAL BACKGROUND
+         APP
     ====================================================== -->
 
-    <div class="app-background">
+    <div
+        class="app"
+        id="app"
+    >
 
-        <div class="background-grid"></div>
 
-        <div class="background-glow background-glow-1"></div>
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
 
-        <div class="background-glow background-glow-2"></div>
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
 
-        <div class="background-glow background-glow-3"></div>
+            <!-- LOGO -->
+
+            <div
+                class="brand"
+            >
+
+                <div
+                    class="brand-logo"
+                >
+                    AI
+                </div>
+
+                <div
+                    class="brand-info"
+                >
+
+                    <h1>
+                        ARUZHAN AI
+                    </h1>
+
+                    <span>
+                        Intelligent Assistant
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEW CHAT -->
+
+            <button
+                class="new-chat-button"
+                id="newChatButton"
+                type="button"
+                onclick="window.ARUZHAN_AI?.clearChat()"
+            >
+
+                <span>
+                    +
+                </span>
+
+                Жаңа чат
+
+            </button>
+
+
+            <!-- AI MODES -->
+
+            <div
+                class="sidebar-section"
+            >
+
+                <div
+                    class="sidebar-title"
+                >
+                    AI MODE
+                </div>
+
+
+                <div
+                    class="mode-list"
+                >
+
+
+                    <!-- COMPANION -->
+
+                    <button
+                        class="mode-button active"
+                        type="button"
+                        data-mode="companion"
+                        onclick="selectMode('companion')"
+                    >
+
+                        <span
+                            class="mode-icon"
+                        >
+                            🤍
+                        </span>
+
+                        <span
+                            class="mode-text"
+                        >
+
+                            <strong>
+                                Companion
+                            </strong>
+
+                            <small>
+                                Natural conversation
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+                    <!-- SMART -->
+
+                    <button
+                        class="mode-button"
+                        type="button"
+                        data-mode="smart"
+                        onclick="selectMode('smart')"
+                    >
+
+                        <span
+                            class="mode-icon"
+                        >
+                            🧠
+                        </span>
+
+                        <span
+                            class="mode-text"
+                        >
+
+                            <strong>
+                                Smart AI
+                            </strong>
+
+                            <small>
+                                Universal assistant
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+                    <!-- STUDY -->
+
+                    <button
+                        class="mode-button"
+                        type="button"
+                        data-mode="study"
+                        onclick="selectMode('study')"
+                    >
+
+                        <span
+                            class="mode-icon"
+                        >
+                            📚
+                        </span>
+
+                        <span
+                            class="mode-text"
+                        >
+
+                            <strong>
+                                Study
+                            </strong>
+
+                            <small>
+                                Learn and understand
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+                    <!-- DEVELOPER -->
+
+                    <button
+                        class="mode-button"
+                        type="button"
+                        data-mode="developer"
+                        onclick="selectMode('developer')"
+                    >
+
+                        <span
+                            class="mode-icon"
+                        >
+                            💻
+                        </span>
+
+                        <span
+                            class="mode-text"
+                        >
+
+                            <strong>
+                                Developer
+                            </strong>
+
+                            <small>
+                                Code and technology
+                            </small>
+
+                        </span>
+
+                    </button>
+
+
+                    <!-- MOTIVATION -->
+
+                    <button
+                        class="mode-button"
+                        type="button"
+                        data-mode="motivation"
+                        onclick="selectMode('motivation')"
+                    >
+
+                        <span
+                            class="mode-icon"
+                        >
+                            🚀
+                        </span>
+
+                        <span
+                            class="mode-text"
+                        >
+
+                            <strong>
+                                Motivation
+                            </strong>
+
+                            <small>
+                                Goals and productivity
+                            </small>
+
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div
+                class="sidebar-status"
+            >
+
+                <span
+                    class="status-dot"
+                    id="statusDot"
+                ></span>
+
+                <span
+                    id="statusText"
+                >
+                    AI Ready
+                </span>
+
+            </div>
+
+
+            <!-- SIDEBAR FOOTER -->
+
+            <div
+                class="sidebar-footer"
+            >
+
+                <span>
+                    ARUZHAN AI
+                </span>
+
+                <span>
+                    v1.0
+                </span>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MAIN AREA
+        ================================================== -->
+
+        <main
+            class="main"
+        >
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <header
+                class="topbar"
+            >
+
+                <div
+                    class="topbar-left"
+                >
+
+                    <!-- MOBILE MENU -->
+
+                    <button
+                        class="icon-button mobile-menu-button"
+                        id="mobileMenuButton"
+                        type="button"
+                        aria-label="Open menu"
+                        onclick="toggleSidebar()"
+                    >
+
+                        ☰
+
+                    </button>
+
+
+                    <!-- AI INFO -->
+
+                    <div
+                        class="ai-header-info"
+                    >
+
+                        <div
+                            class="ai-avatar"
+                        >
+                            AI
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                ARUZHAN AI
+                            </h2>
+
+                            <span
+                                class="online-status"
+                            >
+
+                                <span
+                                    class="online-dot"
+                                ></span>
+
+                                Online
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="topbar-right"
+                >
+
+                    <!-- CURRENT MODE -->
+
+                    <div
+                        class="current-mode"
+                        id="currentModeLabel"
+                    >
+                        Companion
+                    </div>
+
+
+                    <!-- CLEAR CHAT -->
+
+                    <button
+                        class="icon-button"
+                        id="clearChat"
+                        type="button"
+                        aria-label="Clear chat"
+                        title="Clear chat"
+                    >
+
+                        🗑
+
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 CHAT AREA
+            ================================================== -->
+
+            <section
+                class="chat-wrapper"
+            >
+
+                <div
+                    class="chat-messages"
+                    id="chatMessages"
+                >
+
+                    <!--
+                        Messages are inserted here
+                        by app.js
+                    -->
+
+                </div>
+
+
+                <!-- =================================================
+                     TYPING INDICATOR
+                ================================================== -->
+
+                <div
+                    class="typing-indicator"
+                    id="typingIndicator"
+                    style="display: none;"
+                >
+
+                    <div
+                        class="typing-avatar"
+                    >
+                        AI
+                    </div>
+
+                    <div
+                        class="typing-content"
+                    >
+
+                        <span>
+                            ARUZHAN AI is thinking
+                        </span>
+
+                        <div
+                            class="typing-dots"
+                        >
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 INPUT AREA
+            ================================================== -->
+
+            <footer
+                class="input-area"
+            >
+
+                <div
+                    class="input-container"
+                >
+
+
+                    <!-- ATTACHMENT -->
+
+                    <button
+                        class="input-action"
+                        type="button"
+                        title="Attach file"
+                        onclick="handleAttachment()"
+                    >
+
+                        📎
+
+                    </button>
+
+
+                    <!-- TEXT INPUT -->
+
+                    <textarea
+                        id="messageInput"
+                        class="message-input"
+                        placeholder="ARUZHAN AI-ға сұрағыңды жаз..."
+                        rows="1"
+                        autocomplete="off"
+                    ></textarea>
+
+
+                    <!-- SEND -->
+
+                    <button
+                        id="sendButton"
+                        class="send-button"
+                        type="button"
+                        title="Send message"
+                    >
+
+                        <span>
+                            ➤
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <!-- INPUT HINT -->
+
+                <div
+                    class="input-hint"
+                >
+
+                    <span>
+                        Enter — жіберу
+                    </span>
+
+                    <span>
+                        Shift + Enter — жаңа жол
+                    </span>
+
+                </div>
+
+
+                <!-- DISCLAIMER -->
+
+                <div
+                    class="ai-disclaimer"
+                >
+
+                    ARUZHAN AI қателесуі мүмкін.
+                    Маңызды ақпаратты тексеріп алыңыз.
+
+                </div>
+
+            </footer>
+
+        </main>
 
     </div>
 
@@ -77,3387 +585,405 @@
     ====================================================== -->
 
     <div
-        id="mobileOverlay"
-        class="mobile-overlay"
-        aria-hidden="true"
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="toggleSidebar()"
     ></div>
 
 
     <!-- =====================================================
-         LEFT SIDEBAR
+         HIDDEN FILE INPUT
     ====================================================== -->
 
-    <aside
-        id="sidebar"
-        class="sidebar"
-        aria-label="Main navigation"
+    <input
+        type="file"
+        id="fileInput"
+        hidden
+        accept="image/*,.pdf,.txt,.doc,.docx"
     >
-
-        <!-- ==============================
-             SIDEBAR HEADER
-        =============================== -->
-
-        <div class="sidebar-header">
-
-            <button
-                id="sidebarCloseBtn"
-                class="icon-button sidebar-close-btn"
-                type="button"
-                aria-label="Close sidebar"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-
-            <div class="brand">
-
-                <div class="brand-logo">
-
-                    <div class="brand-logo-inner">
-                        A
-                    </div>
-
-                    <span class="brand-status-dot"></span>
-
-                </div>
-
-
-                <div class="brand-content">
-
-                    <div class="brand-name">
-                        ARUZHAN
-                    </div>
-
-                    <div class="brand-subtitle">
-                        AI COMPANION
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <button
-                id="sidebarCollapseBtn"
-                class="icon-button sidebar-collapse-btn"
-                type="button"
-                aria-label="Collapse sidebar"
-            >
-                <i class="fa-solid fa-angles-left"></i>
-            </button>
-
-        </div>
-
-
-        <!-- ==============================
-             NEW CHAT BUTTON
-        =============================== -->
-
-        <div class="sidebar-new-chat">
-
-            <button
-                id="newChatBtn"
-                class="new-chat-button"
-                type="button"
-            >
-
-                <span class="new-chat-icon">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-
-                <span class="new-chat-label">
-                    Жаңа чат
-                </span>
-
-                <span class="new-chat-shortcut">
-                    Ctrl K
-                </span>
-
-            </button>
-
-        </div>
-
-
-        <!-- ==============================
-             SIDEBAR SEARCH
-        =============================== -->
-
-        <div class="sidebar-search">
-
-            <div class="search-box">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input
-                    id="chatSearchInput"
-                    type="search"
-                    placeholder="Чаттарды іздеу..."
-                    autocomplete="off"
-                >
-
-                <span class="search-shortcut">
-                    /
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==============================
-             MAIN NAVIGATION
-        =============================== -->
-
-        <nav class="sidebar-navigation">
-
-            <!-- ==========================
-                 PRIMARY
-            =========================== -->
-
-            <div class="navigation-section">
-
-                <div class="navigation-section-title">
-                    Негізгі
-                </div>
-
-
-                <button
-                    class="navigation-item active"
-                    data-page="chat"
-                    type="button"
-                >
-
-                    <span class="navigation-icon">
-                        <i class="fa-regular fa-message"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Чат
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item"
-                    data-page="explore"
-                    type="button"
-                >
-
-                    <span class="navigation-icon">
-                        <i class="fa-solid fa-compass"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Зерттеу
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item"
-                    data-page="memory"
-                    type="button"
-                >
-
-                    <span class="navigation-icon">
-                        <i class="fa-solid fa-brain"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Менің жадым
-                    </span>
-
-                    <span class="navigation-badge">
-                        AI
-                    </span>
-
-                </button>
-
-            </div>
-
-
-            <!-- ==========================
-                 AI MODES
-            =========================== -->
-
-            <div class="navigation-section">
-
-                <div class="navigation-section-title">
-                    AI режимдері
-                </div>
-
-
-                <button
-                    class="navigation-item mode-item active-mode"
-                    data-mode="companion"
-                    type="button"
-                >
-
-                    <span class="navigation-icon mode-icon companion-icon">
-                        <i class="fa-solid fa-heart"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Companion
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item mode-item"
-                    data-mode="smart"
-                    type="button"
-                >
-
-                    <span class="navigation-icon mode-icon smart-icon">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Smart AI
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item mode-item"
-                    data-mode="study"
-                    type="button"
-                >
-
-                    <span class="navigation-icon mode-icon study-icon">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Study
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item mode-item"
-                    data-mode="developer"
-                    type="button"
-                >
-
-                    <span class="navigation-icon mode-icon developer-icon">
-                        <i class="fa-solid fa-code"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Developer
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="navigation-item mode-item"
-                    data-mode="motivation"
-                    type="button"
-                >
-
-                    <span class="navigation-icon mode-icon motivation-icon">
-                        <i class="fa-solid fa-fire"></i>
-                    </span>
-
-                    <span class="navigation-label">
-                        Motivation
-                    </span>
-
-                </button>
-
-            </div>
-
-
-            <!-- ==========================
-                 RECENT CHATS
-            =========================== -->
-
-            <div class="navigation-section recent-chats-section">
-
-                <div class="navigation-section-header">
-
-                    <div class="navigation-section-title">
-                        Соңғы чаттар
-                    </div>
-
-                    <button
-                        id="clearHistoryBtn"
-                        class="tiny-icon-button"
-                        type="button"
-                        title="Clear history"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                </div>
-
-
-                <div
-                    id="chatHistoryList"
-                    class="chat-history-list"
-                >
-
-                    <!-- Dynamic chats will appear here -->
-
-                    <button
-                        class="chat-history-item active"
-                        data-chat-id="welcome-chat"
-                        type="button"
-                    >
-
-                        <span class="chat-history-icon">
-                            <i class="fa-regular fa-message"></i>
-                        </span>
-
-                        <span class="chat-history-content">
-
-                            <span class="chat-history-title">
-                                Аружанмен алғашқы чат
-                            </span>
-
-                            <span class="chat-history-time">
-                                Қазір
-                            </span>
-
-                        </span>
-
-                        <span class="chat-history-more">
-                            <i class="fa-solid fa-ellipsis"></i>
-                        </span>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </nav>
-
-
-        <!-- =================================================
-             SIDEBAR FOOTER
-        ================================================== -->
-
-        <div class="sidebar-footer">
-
-            <!-- ==========================
-                 AI STATUS
-            =========================== -->
-
-            <div class="ai-status-card">
-
-                <div class="ai-status-avatar">
-
-                    <div class="mini-avatar">
-                        A
-                    </div>
-
-                    <span class="online-dot"></span>
-
-                </div>
-
-
-                <div class="ai-status-content">
-
-                    <div class="ai-status-title">
-                        Аружан
-                    </div>
-
-                    <div class="ai-status-text">
-                        <span class="status-indicator"></span>
-                        Online
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="aiStatusBtn"
-                    class="tiny-icon-button"
-                    type="button"
-                >
-                    <i class="fa-solid fa-chevron-up"></i>
-                </button>
-
-            </div>
-
-
-            <!-- ==========================
-                 USER PROFILE
-            =========================== -->
-
-            <button
-                id="profileButton"
-                class="user-profile-button"
-                type="button"
-            >
-
-                <div class="user-avatar">
-
-                    <span id="userAvatarLetter">
-                        B
-                    </span>
-
-                </div>
-
-
-                <div class="user-profile-content">
-
-                    <span
-                        id="sidebarUserName"
-                        class="user-profile-name"
-                    >
-                        Байрақ
-                    </span>
-
-                    <span class="user-profile-plan">
-                        Free Plan
-                    </span>
-
-                </div>
-
-
-                <i class="fa-solid fa-ellipsis-vertical"></i>
-
-            </button>
-
-        </div>
-
-    </aside>
 
 
     <!-- =====================================================
-         MAIN CONTENT
+         APP.JS
     ====================================================== -->
 
-    <main
-        id="mainContent"
-        class="main-content"
-    >
-
-        <!-- =================================================
-             TOP HEADER
-        ================================================== -->
-
-        <header class="top-header">
-
-            <!-- MOBILE MENU -->
-
-            <button
-                id="mobileMenuBtn"
-                class="icon-button mobile-menu-button"
-                type="button"
-                aria-label="Open menu"
-            >
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-
-            <!-- CURRENT AI MODE -->
-
-            <div class="current-mode-wrapper">
-
-                <button
-                    id="currentModeButton"
-                    class="current-mode-button"
-                    type="button"
-                >
-
-                    <span
-                        id="currentModeIcon"
-                        class="current-mode-icon"
-                    >
-                        <i class="fa-solid fa-heart"></i>
-                    </span>
-
-                    <span class="current-mode-content">
-
-                        <span
-                            id="currentModeName"
-                            class="current-mode-name"
-                        >
-                            Companion
-                        </span>
-
-                        <span
-                            id="currentModeDescription"
-                            class="current-mode-description"
-                        >
-                            Досыңдай сөйлес
-                        </span>
-
-                    </span>
-
-                    <i class="fa-solid fa-chevron-down"></i>
-
-                </button>
-
-
-                <!-- MODE DROPDOWN -->
-
-                <div
-                    id="modeDropdown"
-                    class="mode-dropdown hidden"
-                >
-
-                    <div class="dropdown-header">
-                        AI режимін таңдаңыз
-                    </div>
-
-
-                    <button
-                        class="dropdown-mode-item active"
-                        data-mode="companion"
-                        type="button"
-                    >
-
-                        <span class="dropdown-mode-icon">
-                            <i class="fa-solid fa-heart"></i>
-                        </span>
-
-                        <span>
-                            <strong>Companion</strong>
-                            <small>Досыңдай сөйлес</small>
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        class="dropdown-mode-item"
-                        data-mode="smart"
-                        type="button"
-                    >
-
-                        <span class="dropdown-mode-icon">
-                            <i class="fa-solid fa-sparkles"></i>
-                        </span>
-
-                        <span>
-                            <strong>Smart AI</strong>
-                            <small>Ақылды көмекші</small>
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        class="dropdown-mode-item"
-                        data-mode="study"
-                        type="button"
-                    >
-
-                        <span class="dropdown-mode-icon">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                        </span>
-
-                        <span>
-                            <strong>Study</strong>
-                            <small>Оқу көмекшісі</small>
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        class="dropdown-mode-item"
-                        data-mode="developer"
-                        type="button"
-                    >
-
-                        <span class="dropdown-mode-icon">
-                            <i class="fa-solid fa-code"></i>
-                        </span>
-
-                        <span>
-                            <strong>Developer</strong>
-                            <small>Код және технология</small>
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        class="dropdown-mode-item"
-                        data-mode="motivation"
-                        type="button"
-                    >
-
-                        <span class="dropdown-mode-icon">
-                            <i class="fa-solid fa-fire"></i>
-                        </span>
-
-                        <span>
-                            <strong>Motivation</strong>
-                            <small>Мотивация және мақсат</small>
-                        </span>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- HEADER ACTIONS -->
-
-            <div class="header-actions">
-
-                <button
-                    id="searchGlobalBtn"
-                    class="icon-button"
-                    type="button"
-                    title="Search"
-                >
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-
-                <button
-                    id="notificationBtn"
-                    class="icon-button notification-button"
-                    type="button"
-                    title="Notifications"
-                >
-
-                    <i class="fa-regular fa-bell"></i>
-
-                    <span
-                        id="notificationBadge"
-                        class="notification-badge"
-                    >
-                        2
-                    </span>
-
-                </button>
-
-
-                <button
-                    id="themeToggleBtn"
-                    class="icon-button"
-                    type="button"
-                    title="Theme"
-                >
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-
-
-                <button
-                    id="settingsBtn"
-                    class="icon-button"
-                    type="button"
-                    title="Settings"
-                >
-                    <i class="fa-solid fa-gear"></i>
-                </button>
-
-            </div>
-
-        </header>
-
-
-        <!-- =================================================
-             CHAT PAGE
-        ================================================== -->
-
-        <section
-            id="chatPage"
-            class="page active-page"
-        >
-
-            <!-- =============================================
-                 CHAT HEADER
-            ============================================== -->
-
-            <div class="chat-header">
-
-                <div class="ai-profile">
-
-                    <div class="ai-avatar-wrapper">
-
-                        <div
-                            id="mainAiAvatar"
-                            class="ai-avatar"
-                        >
-
-                            <div class="avatar-glow"></div>
-
-                            <div class="avatar-face">
-
-                                <span class="avatar-letter">
-                                    A
-                                </span>
-
-                            </div>
-
-                            <span class="avatar-online-dot"></span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="ai-profile-info">
-
-                        <div class="ai-profile-name-row">
-
-                            <h1 id="aiName">
-                                Аружан
-                            </h1>
-
-                            <span class="verified-badge">
-                                <i class="fa-solid fa-check"></i>
-                            </span>
-
-                        </div>
-
-
-                        <div class="ai-profile-status">
-
-                            <span class="status-indicator"></span>
-
-                            <span id="aiOnlineStatus">
-                                Online
-                            </span>
-
-                            <span class="status-divider">
-                                •
-                            </span>
-
-                            <span>
-                                AI Companion
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- CHAT HEADER ACTIONS -->
-
-                <div class="chat-header-actions">
-
-                    <button
-                        id="voiceCallBtn"
-                        class="header-action-button"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-phone"></i>
-
-                        <span>
-                            Voice
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="videoCallBtn"
-                        class="header-action-button"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-video"></i>
-
-                        <span>
-                            Video
-                        </span>
-
-                    </button>
-
-
-                    <button
-                        id="chatInfoBtn"
-                        class="icon-button"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-circle-info"></i>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- =============================================
-                 CHAT BODY
-            ============================================== -->
-
-            <div
-                id="chatContainer"
-                class="chat-container"
-            >
-
-                <!-- =========================================
-                     WELCOME SCREEN
-                ========================================== -->
-
-                <div
-                    id="welcomeScreen"
-                    class="welcome-screen"
-                >
-
-                    <div class="welcome-avatar-area">
-
-                        <div class="welcome-avatar-glow"></div>
-
-                        <div class="welcome-avatar">
-
-                            <div class="welcome-avatar-inner">
-                                A
-                            </div>
-
-                            <span class="welcome-avatar-ring"></span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="welcome-content">
-
-                        <div class="welcome-eyebrow">
-                            ✨ ARUZHAN AI
-                        </div>
-
-                        <h2>
-                            Сәлем, мен Аружанмын.
-                        </h2>
-
-                        <p>
-                            Мен сенімен сөйлесуге, сұрақтарыңа жауап беруге,
-                            идеяларыңды дамытуға және күнделікті істеріңе
-                            көмектесуге дайынмын.
-                        </p>
-
-                        <div class="welcome-status">
-
-                            <span class="status-indicator"></span>
-
-                            <span>
-                                Мен қазір онлайнмын
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- =====================================
-                         QUICK PROMPTS
-                    ====================================== -->
-
-                    <div class="quick-prompts">
-
-                        <button
-                            class="quick-prompt-card"
-                            data-prompt="Бүгінгі күнімді жоспарлауға көмектесші"
-                            type="button"
-                        >
-
-                            <span class="quick-prompt-icon">
-                                <i class="fa-regular fa-calendar"></i>
-                            </span>
-
-                            <span class="quick-prompt-content">
-
-                                <strong>
-                                    Күнді жоспарлау
-                                </strong>
-
-                                <small>
-                                    Бүгінгі жоспарымды құрайық
-                                </small>
-
-                            </span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-
-                        <button
-                            class="quick-prompt-card"
-                            data-prompt="Менің жаңа жобама қызықты идеялар ұсыншы"
-                            type="button"
-                        >
-
-                            <span class="quick-prompt-icon">
-                                <i class="fa-solid fa-lightbulb"></i>
-                            </span>
-
-                            <span class="quick-prompt-content">
-
-                                <strong>
-                                    Идея ойлап табу
-                                </strong>
-
-                                <small>
-                                    Жаңа идеяларды бірге іздейік
-                                </small>
-
-                            </span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-
-                        <button
-                            class="quick-prompt-card"
-                            data-prompt="Маған жаңа нәрсе үйретші"
-                            type="button"
-                        >
-
-                            <span class="quick-prompt-icon">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </span>
-
-                            <span class="quick-prompt-content">
-
-                                <strong>
-                                    Бір нәрсе үйрену
-                                </strong>
-
-                                <small>
-                                    Кез келген тақырыпты түсіндіремін
-                                </small>
-
-                            </span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-
-                        <button
-                            class="quick-prompt-card"
-                            data-prompt="Маған бүгін мотивация берші"
-                            type="button"
-                        >
-
-                            <span class="quick-prompt-icon">
-                                <i class="fa-solid fa-fire"></i>
-                            </span>
-
-                            <span class="quick-prompt-content">
-
-                                <strong>
-                                    Мотивация
-                                </strong>
-
-                                <small>
-                                    Көңіл-күйімді көтерші
-                                </small>
-
-                            </span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =========================================
-                     MESSAGES
-                ========================================== -->
-
-                <div
-                    id="messagesList"
-                    class="messages-list"
-                >
-
-                    <!-- User and AI messages will be inserted here -->
-
-                </div>
-
-
-                <!-- =========================================
-                     TYPING INDICATOR
-                ========================================== -->
-
-                <div
-                    id="typingIndicator"
-                    class="typing-indicator hidden"
-                >
-
-                    <div class="typing-avatar">
-                        A
-                    </div>
-
-                    <div class="typing-content">
-
-                        <span>
-                            Аружан жазып жатыр
-                        </span>
-
-                        <div class="typing-dots">
-
-                            <span></span>
-                            <span></span>
-                            <span></span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =========================================
-                     AI STATE
-                ========================================== -->
-
-                <div
-                    id="aiStateIndicator"
-                    class="ai-state-indicator hidden"
-                >
-
-                    <div class="ai-state-icon">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </div>
-
-                    <span id="aiStateText">
-                        AI ойланып жатыр...
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- =================================================
-                 COMPOSER AREA
-            ================================================== -->
-
-            <div class="composer-wrapper">
-
-                <!-- =============================================
-                     ATTACHMENT PREVIEW
-                ============================================== -->
-
-                <div
-                    id="attachmentPreview"
-                    class="attachment-preview hidden"
-                >
-
-                    <div class="attachment-info">
-
-                        <div class="attachment-icon">
-                            <i class="fa-solid fa-file"></i>
-                        </div>
-
-                        <div class="attachment-details">
-
-                            <span
-                                id="attachmentName"
-                                class="attachment-name"
-                            >
-                                file.pdf
-                            </span>
-
-                            <span
-                                id="attachmentSize"
-                                class="attachment-size"
-                            >
-                                0 KB
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        id="removeAttachmentBtn"
-                        class="tiny-icon-button"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-
-                </div>
-
-
-                <!-- =============================================
-                     COMPOSER
-                ============================================== -->
-
-                <div
-                    id="messageComposer"
-                    class="message-composer"
-                >
-
-                    <!-- ATTACH FILE -->
-
-                    <button
-                        id="attachFileBtn"
-                        class="composer-button"
-                        type="button"
-                        title="Файл тіркеу"
-                    >
-
-                        <i class="fa-solid fa-paperclip"></i>
-
-                    </button>
-
-
-                    <input
-                        id="fileInput"
-                        type="file"
-                        hidden
-                        multiple
-                    >
-
-
-                    <!-- IMAGE -->
-
-                    <button
-                        id="imageUploadBtn"
-                        class="composer-button"
-                        type="button"
-                        title="Сурет жүктеу"
-                    >
-
-                        <i class="fa-regular fa-image"></i>
-
-                    </button>
-
-
-                    <input
-                        id="imageInput"
-                        type="file"
-                        accept="image/*"
-                        hidden
-                    >
-
-
-                    <!-- TEXTAREA -->
-
-                    <div class="composer-input-wrapper">
-
-                        <textarea
-                            id="messageInput"
-                            class="message-input"
-                            rows="1"
-                            maxlength="10000"
-                            placeholder="Аружанға хабарлама жазыңыз..."
-                            autocomplete="off"
-                        ></textarea>
-
-
-                        <div class="composer-input-bottom">
-
-                            <span
-                                id="characterCounter"
-                                class="character-counter"
-                            >
-                                0 / 10000
-                            </span>
-
-                            <span class="input-hint">
-                                Enter — жіберу · Shift + Enter — жаңа жол
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- EMOJI -->
-
-                    <button
-                        id="emojiBtn"
-                        class="composer-button"
-                        type="button"
-                        title="Emoji"
-                    >
-
-                        <i class="fa-regular fa-face-smile"></i>
-
-                    </button>
-
-
-                    <!-- VOICE -->
-
-                    <button
-                        id="voiceInputBtn"
-                        class="composer-button voice-button"
-                        type="button"
-                        title="Дауыс арқылы жазу"
-                    >
-
-                        <i class="fa-solid fa-microphone"></i>
-
-                    </button>
-
-
-                    <!-- SEND -->
-
-                    <button
-                        id="sendMessageBtn"
-                        class="send-button"
-                        type="button"
-                        title="Жіберу"
-                    >
-
-                        <i class="fa-solid fa-arrow-up"></i>
-
-                    </button>
-
-                </div>
-
-
-                <!-- =============================================
-                     COMPOSER FOOTER
-                ============================================== -->
-
-                <div class="composer-footer">
-
-                    <div class="composer-footer-left">
-
-                        <span class="secure-message">
-
-                            <i class="fa-solid fa-shield-halved"></i>
-
-                            AI жауаптары қате болуы мүмкін
-
-                        </span>
-
-                    </div>
-
-
-                    <div class="composer-footer-right">
-
-                        <span
-                            id="connectionStatus"
-                            class="connection-status"
-                        >
-
-                            <span class="connection-dot"></span>
-
-                            Connected
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             EXPLORE PAGE
-        ================================================== -->
-
-        <section
-            id="explorePage"
-            class="page hidden-page"
-        >
-
-            <div class="page-header">
-
-                <div>
-
-                    <span class="page-eyebrow">
-                        ARUZHAN AI
-                    </span>
-
-                    <h2>
-                        AI мүмкіндіктерін зертте
-                    </h2>
-
-                    <p>
-                        Аружанды әртүрлі тапсырмаларда пайдаланыңыз.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature-grid">
-
-                <!-- FEATURE 1 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="conversation"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-regular fa-message"></i>
-                    </div>
-
-                    <h3>
-                        Ақылды әңгіме
-                    </h3>
-
-                    <p>
-                        Кез келген тақырыпта сөйлесіп,
-                        сұрақтарыңызға жауап алыңыз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Бастау
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-
-                <!-- FEATURE 2 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="learning"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-
-                    <h3>
-                        Оқу
-                    </h3>
-
-                    <p>
-                        Күрделі тақырыптарды қарапайым
-                        тілмен түсініңіз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Үйрену
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-
-                <!-- FEATURE 3 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="coding"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-solid fa-code"></i>
-                    </div>
-
-                    <h3>
-                        Код жазу
-                    </h3>
-
-                    <p>
-                        Бағдарламалау, debugging және
-                        жоба жасауға көмектесіңіз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Developer Mode
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-
-                <!-- FEATURE 4 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="ideas"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-solid fa-lightbulb"></i>
-                    </div>
-
-                    <h3>
-                        Идеялар
-                    </h3>
-
-                    <p>
-                        Жаңа жобалар мен шығармашылық
-                        идеяларды бірге дамытыңыз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Идея бастау
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-
-                <!-- FEATURE 5 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="writing"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-solid fa-pen-nib"></i>
-                    </div>
-
-                    <h3>
-                        Жазу
-                    </h3>
-
-                    <p>
-                        Мәтін, сценарий, пост және
-                        басқа контент жасаңыз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Жазуды бастау
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-
-                <!-- FEATURE 6 -->
-
-                <button
-                    class="feature-card"
-                    data-feature="planning"
-                    type="button"
-                >
-
-                    <div class="feature-card-icon">
-                        <i class="fa-solid fa-list-check"></i>
-                    </div>
-
-                    <h3>
-                        Жоспарлау
-                    </h3>
-
-                    <p>
-                        Мақсаттарыңызды анықтап,
-                        нақты жоспар құрыңыз.
-                    </p>
-
-                    <span class="feature-card-link">
-                        Жоспарлау
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </span>
-
-                </button>
-
-            </div>
-
-
-            <!-- AI CAPABILITIES -->
-
-            <div class="capabilities-section">
-
-                <div class="section-heading">
-
-                    <h3>
-                        Аружан не істей алады?
-                    </h3>
-
-                    <p>
-                        AI мүмкіндіктері біртіндеп кеңейтіледі.
-                    </p>
-
-                </div>
-
-
-                <div class="capabilities-list">
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Кез келген тақырыпта сөйлесу
-                        </span>
-
-                    </div>
-
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Сұрақтарға ақылды жауап беру
-                        </span>
-
-                    </div>
-
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Контекстті түсіну
-                        </span>
-
-                    </div>
-
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Жеке Memory жүйесі
-                        </span>
-
-                    </div>
-
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Дауыспен сөйлесу
-                        </span>
-
-                    </div>
-
-
-                    <div class="capability-item">
-
-                        <span class="capability-check">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-
-                        <span>
-                            Файлдармен жұмыс
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             MEMORY PAGE
-        ================================================== -->
-
-        <section
-            id="memoryPage"
-            class="page hidden-page"
-        >
-
-            <div class="page-header">
-
-                <div>
-
-                    <span class="page-eyebrow">
-                        PERSONAL AI
-                    </span>
-
-                    <h2>
-                        Менің жадым
-                    </h2>
-
-                    <p>
-                        Аружан сіз туралы есте сақтаған ақпарат.
-                    </p>
-
-                </div>
-
-
-                <button
-                    id="addMemoryBtn"
-                    class="primary-button"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-plus"></i>
-
-                    Жад қосу
-
-                </button>
-
-            </div>
-
-
-            <!-- MEMORY STATUS -->
-
-            <div class="memory-overview">
-
-                <div class="memory-overview-icon">
-
-                    <i class="fa-solid fa-brain"></i>
-
-                </div>
-
-
-                <div class="memory-overview-content">
-
-                    <h3>
-                        Personal Memory
-                    </h3>
-
-                    <p>
-                        Аружан сізбен сөйлесу кезінде
-                        маңызды ақпараттарды есте сақтай алады.
-                    </p>
-
-                </div>
-
-
-                <label class="toggle-switch">
-
-                    <input
-                        id="memoryToggle"
-                        type="checkbox"
-                        checked
-                    >
-
-                    <span class="toggle-slider"></span>
-
-                </label>
-
-            </div>
-
-
-            <!-- MEMORY LIST -->
-
-            <div
-                id="memoryList"
-                class="memory-list"
-            >
-
-                <div
-                    class="memory-card"
-                    data-memory-id="user-name"
-                >
-
-                    <div class="memory-card-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-
-                    <div class="memory-card-content">
-
-                        <span class="memory-card-label">
-                            Есім
-                        </span>
-
-                        <strong class="memory-card-value">
-                            Байрақ
-                        </strong>
-
-                    </div>
-
-                    <button
-                        class="memory-delete-button"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                </div>
-
-
-                <div
-                    class="memory-card"
-                    data-memory-id="language"
-                >
-
-                    <div class="memory-card-icon">
-                        <i class="fa-solid fa-language"></i>
-                    </div>
-
-                    <div class="memory-card-content">
-
-                        <span class="memory-card-label">
-                            Негізгі тіл
-                        </span>
-
-                        <strong class="memory-card-value">
-                            Қазақша
-                        </strong>
-
-                    </div>
-
-                    <button
-                        class="memory-delete-button"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                </div>
-
-
-                <div
-                    class="memory-card"
-                    data-memory-id="interests"
-                >
-
-                    <div class="memory-card-icon">
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-
-                    <div class="memory-card-content">
-
-                        <span class="memory-card-label">
-                            Қызығушылық
-                        </span>
-
-                        <strong class="memory-card-value">
-                            AI және веб-сайт жасау
-                        </strong>
-
-                    </div>
-
-                    <button
-                        class="memory-delete-button"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PROFILE PANEL
-        ================================================== -->
-
-        <section
-            id="profilePage"
-            class="page hidden-page"
-        >
-
-            <div class="profile-page">
-
-                <div class="profile-cover">
-
-                    <div class="profile-cover-pattern"></div>
-
-                </div>
-
-
-                <div class="profile-main">
-
-                    <div class="profile-avatar-large">
-                        B
-                    </div>
-
-
-                    <div class="profile-info">
-
-                        <h2 id="profileName">
-                            Байрақ
-                        </h2>
-
-                        <p id="profileEmail">
-                            AI Companion User
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        id="editProfileBtn"
-                        class="secondary-button"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-pen"></i>
-
-                        Профильді өзгерту
-
-                    </button>
-
-                </div>
-
-
-                <div class="profile-statistics">
-
-                    <div class="profile-stat-card">
-
-                        <span class="profile-stat-icon">
-                            <i class="fa-regular fa-message"></i>
-                        </span>
-
-                        <strong id="totalChats">
-                            0
-                        </strong>
-
-                        <span>
-                            Чаттар
-                        </span>
-
-                    </div>
-
-
-                    <div class="profile-stat-card">
-
-                        <span class="profile-stat-icon">
-                            <i class="fa-solid fa-comment"></i>
-                        </span>
-
-                        <strong id="totalMessages">
-                            0
-                        </strong>
-
-                        <span>
-                            Хабарламалар
-                        </span>
-
-                    </div>
-
-
-                    <div class="profile-stat-card">
-
-                        <span class="profile-stat-icon">
-                            <i class="fa-solid fa-brain"></i>
-                        </span>
-
-                        <strong id="totalMemories">
-                            0
-                        </strong>
-
-                        <span>
-                            Memory
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
+    <script
+        src="app.js"
+    ></script>
 
 
     <!-- =====================================================
-         RIGHT INFO PANEL
+         EXTRA UI LOGIC
     ====================================================== -->
 
-    <aside
-        id="infoPanel"
-        class="info-panel hidden"
-    >
+    <script>
 
-        <div class="info-panel-header">
+        /* ==================================================
+           CURRENT MODE
+        ================================================== */
 
-            <h3>
-                Чат туралы
-            </h3>
+        function selectMode(mode) {
 
-            <button
-                id="closeInfoPanelBtn"
-                class="icon-button"
-                type="button"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            const buttons =
+                document.querySelectorAll(
+                    ".mode-button"
+                );
 
-        </div>
 
+            buttons.forEach(
 
-        <div class="info-panel-content">
+                button => {
 
-            <div class="info-ai-profile">
+                    button.classList.remove(
+                        "active"
+                    );
 
-                <div class="info-ai-avatar">
-                    A
-                </div>
+                }
 
-                <h3>
-                    Аружан
-                </h3>
+            );
 
-                <span>
-                    AI Companion
-                </span>
 
-            </div>
+            const selectedButton =
 
+                document.querySelector(
 
-            <div class="info-panel-section">
+                    `[data-mode="${mode}"]`
 
-                <span class="info-label">
-                    Қазіргі режим
-                </span>
+                );
 
-                <strong id="infoCurrentMode">
-                    Companion
-                </strong>
 
-            </div>
+            if (
+                selectedButton
+            ) {
 
+                selectedButton.classList.add(
+                    "active"
+                );
 
-            <div class="info-panel-section">
+            }
 
-                <span class="info-label">
-                    Хабарламалар
-                </span>
 
-                <strong id="infoMessageCount">
-                    0
-                </strong>
+            /* ----------------------------------------------
+               UPDATE CURRENT MODE
+            ---------------------------------------------- */
 
-            </div>
+            const modeNames = {
 
+                companion:
+                    "Companion",
 
-            <div class="info-panel-section">
+                smart:
+                    "Smart AI",
 
-                <span class="info-label">
-                    Memory
-                </span>
+                study:
+                    "Study",
 
-                <strong id="infoMemoryStatus">
-                    Enabled
-                </strong>
+                developer:
+                    "Developer",
 
-            </div>
+                motivation:
+                    "Motivation"
 
+            };
 
-            <div class="info-panel-actions">
 
-                <button
-                    id="exportChatBtn"
-                    class="secondary-button full-width"
-                    type="button"
-                >
+            const modeLabel =
 
-                    <i class="fa-solid fa-download"></i>
+                document.getElementById(
 
-                    Чатты экспорттау
+                    "currentModeLabel"
 
-                </button>
+                );
 
 
-                <button
-                    id="deleteCurrentChatBtn"
-                    class="danger-button full-width"
-                    type="button"
-                >
+            if (
+                modeLabel
+            ) {
 
-                    <i class="fa-solid fa-trash"></i>
-
-                    Чатты өшіру
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- =====================================================
-         EMOJI PICKER
-    ====================================================== -->
-
-    <div
-        id="emojiPicker"
-        class="emoji-picker hidden"
-    >
-
-        <div class="emoji-picker-header">
-
-            <strong>
-                Эмодзи
-            </strong>
-
-            <button
-                id="closeEmojiPickerBtn"
-                class="tiny-icon-button"
-                type="button"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+                modeLabel.textContent =
 
-        </div>
+                    modeNames[mode] ||
 
+                    "Companion";
 
-        <div class="emoji-categories">
+            }
 
-            <button
-                class="emoji-category active"
-                data-category="smileys"
-                type="button"
-            >
-                😊
-            </button>
 
-            <button
-                class="emoji-category"
-                data-category="hearts"
-                type="button"
-            >
-                ❤️
-            </button>
+            /* ----------------------------------------------
+               SEND MODE TO APP.JS
+            ---------------------------------------------- */
 
-            <button
-                class="emoji-category"
-                data-category="objects"
-                type="button"
-            >
-                💡
-            </button>
+            if (
+                window.ARUZHAN_AI
+            ) {
 
-            <button
-                class="emoji-category"
-                data-category="nature"
-                type="button"
-            >
-                🌎
-            </button>
+                window.ARUZHAN_AI.setMode(
+                    mode
+                );
 
-        </div>
+            }
 
+        }
 
-        <div
-            id="emojiGrid"
-            class="emoji-grid"
-        >
 
-            <button type="button">😀</button>
-            <button type="button">😃</button>
-            <button type="button">😄</button>
-            <button type="button">😁</button>
-            <button type="button">😆</button>
-            <button type="button">😅</button>
-            <button type="button">😂</button>
-            <button type="button">🤣</button>
-            <button type="button">😊</button>
-            <button type="button">😇</button>
-            <button type="button">🙂</button>
-            <button type="button">🙃</button>
-            <button type="button">😉</button>
-            <button type="button">😍</button>
-            <button type="button">🥰</button>
-            <button type="button">😘</button>
-            <button type="button">😎</button>
-            <button type="button">🤩</button>
-            <button type="button">🔥</button>
-            <button type="button">❤️</button>
-            <button type="button">💙</button>
-            <button type="button">💚</button>
-            <button type="button">💜</button>
-            <button type="button">✨</button>
+        /* ==================================================
+           MOBILE SIDEBAR
+        ================================================== */
 
-        </div>
+        function toggleSidebar() {
 
-    </div>
+            const sidebar =
 
+                document.getElementById(
+                    "sidebar"
+                );
 
-    <!-- =====================================================
-         SETTINGS MODAL
-    ====================================================== -->
 
-    <div
-        id="settingsModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="settingsModalTitle"
-    >
+            const overlay =
 
-        <div class="modal-overlay"></div>
+                document.getElementById(
+                    "sidebarOverlay"
+                );
 
 
-        <div class="modal-window settings-modal">
+            if (
+                sidebar
+            ) {
 
-            <div class="modal-header">
+                sidebar.classList.toggle(
+                    "open"
+                );
 
-                <div>
+            }
 
-                    <span class="modal-eyebrow">
-                        ARUZHAN AI
-                    </span>
 
-                    <h2 id="settingsModalTitle">
-                        Settings
-                    </h2>
+            if (
+                overlay
+            ) {
 
-                </div>
+                overlay.classList.toggle(
+                    "active"
+                );
 
+            }
 
-                <button
-                    class="modal-close-button"
-                    data-close-modal="settingsModal"
-                    type="button"
-                >
+        }
 
-                    <i class="fa-solid fa-xmark"></i>
 
-                </button>
+        /* ==================================================
+           FILE ATTACHMENT
+        ================================================== */
 
-            </div>
+        function handleAttachment() {
 
+            const fileInput =
 
-            <div class="settings-layout">
+                document.getElementById(
+                    "fileInput"
+                );
 
-                <!-- SETTINGS SIDEBAR -->
 
-                <nav class="settings-navigation">
+            if (
+                fileInput
+            ) {
 
-                    <button
-                        class="settings-nav-item active"
-                        data-settings-tab="general"
-                        type="button"
-                    >
+                fileInput.click();
 
-                        <i class="fa-solid fa-sliders"></i>
+            }
 
-                        Жалпы
+        }
 
-                    </button>
 
+        /* ==================================================
+           FILE SELECTED
+        ================================================== */
 
-                    <button
-                        class="settings-nav-item"
-                        data-settings-tab="appearance"
-                        type="button"
-                    >
+        document
+            .getElementById(
+                "fileInput"
+            )
+            ?.addEventListener(
 
-                        <i class="fa-solid fa-palette"></i>
+                "change",
 
-                        Көрініс
+                function () {
 
-                    </button>
+                    const file =
 
+                        this.files?.[0];
 
-                    <button
-                        class="settings-nav-item"
-                        data-settings-tab="ai"
-                        type="button"
-                    >
 
-                        <i class="fa-solid fa-brain"></i>
+                    if (
+                        !file
+                    ) {
 
-                        AI
+                        return;
 
-                    </button>
+                    }
 
 
-                    <button
-                        class="settings-nav-item"
-                        data-settings-tab="voice"
-                        type="button"
-                    >
+                    console.log(
 
-                        <i class="fa-solid fa-microphone"></i>
+                        "Selected file:",
 
-                        Voice
+                        file.name
 
-                    </button>
+                    );
 
 
-                    <button
-                        class="settings-nav-item"
-                        data-settings-tab="privacy"
-                        type="button"
-                    >
+                    alert(
 
-                        <i class="fa-solid fa-shield-halved"></i>
+                        `Файл таңдалды: ${file.name}`
 
-                        Қауіпсіздік
+                    );
 
-                    </button>
+                }
 
-                </nav>
+            );
 
 
-                <!-- SETTINGS CONTENT -->
+        /* ==================================================
+           BACKEND STATUS
+        ================================================== */
 
-                <div class="settings-content">
+        async function updateBackendStatus() {
 
-                    <!-- ================================
-                         GENERAL TAB
-                    ================================= -->
+            const dot =
 
-                    <div
-                        class="settings-tab active"
-                        data-settings-content="general"
-                    >
+                document.getElementById(
+                    "statusDot"
+                );
 
-                        <div class="settings-section">
 
-                            <h3>
-                                Жалпы баптаулар
-                            </h3>
+            const text =
 
-                            <p>
-                                ARUZHAN AI қолдану тәжірибесін
-                                өзіңізге ыңғайлаңыз.
-                            </p>
+                document.getElementById(
+                    "statusText"
+                );
 
 
-                            <div class="setting-row">
+            try {
 
-                                <div class="setting-row-info">
+                if (
+                    !window.ARUZHAN_AI
+                ) {
 
-                                    <strong>
-                                        Тіл
-                                    </strong>
+                    return;
 
-                                    <span>
-                                        AI интерфейсінің тілі
-                                    </span>
+                }
 
-                                </div>
 
+                await window.ARUZHAN_AI
+                    .checkBackend();
 
-                                <select
-                                    id="languageSelect"
-                                    class="settings-select"
-                                >
 
-                                    <option value="kk">
-                                        Қазақша
-                                    </option>
+                if (
+                    dot
+                ) {
 
-                                    <option value="ru">
-                                        Русский
-                                    </option>
+                    dot.classList.add(
+                        "online"
+                    );
 
-                                    <option value="en">
-                                        English
-                                    </option>
+                }
 
-                                </select>
 
-                            </div>
+                if (
+                    text
+                ) {
 
+                    text.textContent =
+                        "AI Ready";
 
-                            <div class="setting-row">
+                }
 
-                                <div class="setting-row-info">
+            } catch (
+                error
+            ) {
 
-                                    <strong>
-                                        Enter арқылы жіберу
-                                    </strong>
+                if (
+                    dot
+                ) {
 
-                                    <span>
-                                        Enter басқанда хабарлама жіберу
-                                    </span>
+                    dot.classList.remove(
+                        "online"
+                    );
 
-                                </div>
+                }
 
 
-                                <label class="toggle-switch">
+                if (
+                    text
+                ) {
 
-                                    <input
-                                        id="enterToSendToggle"
-                                        type="checkbox"
-                                        checked
-                                    >
+                    text.textContent =
+                        "Offline";
 
-                                    <span class="toggle-slider"></span>
+                }
 
-                                </label>
+            }
 
-                            </div>
+        }
 
 
-                            <div class="setting-row">
+        /* ==================================================
+           CLOSE MOBILE SIDEBAR ON MODE SELECT
+        ================================================== */
 
-                                <div class="setting-row-info">
+        document
+            .querySelectorAll(
+                ".mode-button"
+            )
+            .forEach(
 
-                                    <strong>
-                                        AI Memory
-                                    </strong>
+                button => {
 
-                                    <span>
-                                        Маңызды ақпаратты есте сақтау
-                                    </span>
+                    button.addEventListener(
 
-                                </div>
+                        "click",
 
+                        () => {
 
-                                <label class="toggle-switch">
+                            if (
+                                window.innerWidth <=
+                                768
+                            ) {
 
-                                    <input
-                                        id="settingsMemoryToggle"
-                                        type="checkbox"
-                                        checked
-                                    >
+                                toggleSidebar();
 
-                                    <span class="toggle-slider"></span>
+                            }
 
-                                </label>
+                        }
 
-                            </div>
+                    );
 
-                        </div>
+                }
 
-                    </div>
+            );
 
 
-                    <!-- ================================
-                         APPEARANCE TAB
-                    ================================= -->
+        /* ==================================================
+           INITIALIZE
+        ================================================== */
 
-                    <div
-                        class="settings-tab"
-                        data-settings-content="appearance"
-                    >
+        document.addEventListener(
 
-                        <div class="settings-section">
+            "DOMContentLoaded",
 
-                            <h3>
-                                Көрініс
-                            </h3>
+            () => {
 
-                            <p>
-                                ARUZHAN AI интерфейсінің
-                                сыртқы көрінісін таңдаңыз.
-                            </p>
+                selectMode(
+                    "companion"
+                );
 
+                updateBackendStatus();
 
-                            <div class="theme-options">
+            }
 
-                                <button
-                                    class="theme-option active"
-                                    data-theme="dark"
-                                    type="button"
-                                >
+        );
 
-                                    <div class="theme-preview dark-preview">
-
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-
-                                    </div>
-
-                                    <strong>
-                                        Dark
-                                    </strong>
-
-                                </button>
-
-
-                                <button
-                                    class="theme-option"
-                                    data-theme="light"
-                                    type="button"
-                                >
-
-                                    <div class="theme-preview light-preview">
-
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-
-                                    </div>
-
-                                    <strong>
-                                        Light
-                                    </strong>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ================================
-                         AI TAB
-                    ================================= -->
-
-                    <div
-                        class="settings-tab"
-                        data-settings-content="ai"
-                    >
-
-                        <div class="settings-section">
-
-                            <h3>
-                                AI параметрлері
-                            </h3>
-
-                            <p>
-                                Аружанның жауап беру стилін реттеңіз.
-                            </p>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        Жауап ұзындығы
-                                    </strong>
-
-                                    <span>
-                                        AI жауаптарының көлемі
-                                    </span>
-
-                                </div>
-
-
-                                <select
-                                    id="responseLengthSelect"
-                                    class="settings-select"
-                                >
-
-                                    <option value="short">
-                                        Қысқа
-                                    </option>
-
-                                    <option value="medium" selected>
-                                        Орташа
-                                    </option>
-
-                                    <option value="long">
-                                        Ұзақ
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        Эмоциялық жауаптар
-                                    </strong>
-
-                                    <span>
-                                        AI эмоцияға бейімделсін
-                                    </span>
-
-                                </div>
-
-
-                                <label class="toggle-switch">
-
-                                    <input
-                                        id="emotionToggle"
-                                        type="checkbox"
-                                        checked
-                                    >
-
-                                    <span class="toggle-slider"></span>
-
-                                </label>
-
-                            </div>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        Контекст сақтау
-                                    </strong>
-
-                                    <span>
-                                        Бұрынғы хабарламаларды ескеру
-                                    </span>
-
-                                </div>
-
-
-                                <label class="toggle-switch">
-
-                                    <input
-                                        id="contextToggle"
-                                        type="checkbox"
-                                        checked
-                                    >
-
-                                    <span class="toggle-slider"></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ================================
-                         VOICE TAB
-                    ================================= -->
-
-                    <div
-                        class="settings-tab"
-                        data-settings-content="voice"
-                    >
-
-                        <div class="settings-section">
-
-                            <h3>
-                                Voice AI
-                            </h3>
-
-                            <p>
-                                Дауыс арқылы сөйлесу параметрлері.
-                            </p>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        Voice Input
-                                    </strong>
-
-                                    <span>
-                                        Дауысты мәтінге айналдыру
-                                    </span>
-
-                                </div>
-
-
-                                <label class="toggle-switch">
-
-                                    <input
-                                        id="voiceInputToggle"
-                                        type="checkbox"
-                                        checked
-                                    >
-
-                                    <span class="toggle-slider"></span>
-
-                                </label>
-
-                            </div>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        AI Voice
-                                    </strong>
-
-                                    <span>
-                                        AI жауаптарын дауыстап оқу
-                                    </span>
-
-                                </div>
-
-
-                                <label class="toggle-switch">
-
-                                    <input
-                                        id="voiceOutputToggle"
-                                        type="checkbox"
-                                    >
-
-                                    <span class="toggle-slider"></span>
-
-                                </label>
-
-                            </div>
-
-
-                            <div class="setting-row">
-
-                                <div class="setting-row-info">
-
-                                    <strong>
-                                        Voice жылдамдығы
-                                    </strong>
-
-                                </div>
-
-
-                                <input
-                                    id="voiceSpeedRange"
-                                    type="range"
-                                    min="0.5"
-                                    max="2"
-                                    step="0.1"
-                                    value="1"
-                                    class="range-input"
-                                >
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ================================
-                         PRIVACY TAB
-                    ================================= -->
-
-                    <div
-                        class="settings-tab"
-                        data-settings-content="privacy"
-                    >
-
-                        <div class="settings-section">
-
-                            <h3>
-                                Қауіпсіздік және құпиялылық
-                            </h3>
-
-                            <p>
-                                Деректеріңізді басқару.
-                            </p>
-
-
-                            <button
-                                id="exportAllDataBtn"
-                                class="secondary-button full-width"
-                                type="button"
-                            >
-
-                                <i class="fa-solid fa-download"></i>
-
-                                Барлық деректі экспорттау
-
-                            </button>
-
-
-                            <button
-                                id="clearAllDataBtn"
-                                class="danger-button full-width"
-                                type="button"
-                            >
-
-                                <i class="fa-solid fa-trash"></i>
-
-                                Барлық деректі өшіру
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    class="secondary-button"
-                    data-close-modal="settingsModal"
-                    type="button"
-                >
-                    Болдырмау
-                </button>
-
-
-                <button
-                    id="saveSettingsBtn"
-                    class="primary-button"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-check"></i>
-
-                    Сақтау
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         PROFILE MODAL
-    ====================================================== -->
-
-    <div
-        id="profileModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-window small-modal">
-
-            <div class="modal-header">
-
-                <div>
-
-                    <span class="modal-eyebrow">
-                        PROFILE
-                    </span>
-
-                    <h2>
-                        Профиль
-                    </h2>
-
-                </div>
-
-
-                <button
-                    class="modal-close-button"
-                    data-close-modal="profileModal"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                </button>
-
-            </div>
-
-
-            <div class="profile-edit-form">
-
-                <div class="profile-edit-avatar">
-                    B
-                </div>
-
-
-                <label class="form-label">
-
-                    Атыңыз
-
-                    <input
-                        id="profileNameInput"
-                        class="form-input"
-                        type="text"
-                        placeholder="Атыңызды жазыңыз"
-                        value="Байрақ"
-                    >
-
-                </label>
-
-
-                <label class="form-label">
-
-                    Тіл
-
-                    <select
-                        id="profileLanguageInput"
-                        class="form-input"
-                    >
-
-                        <option value="kk">
-                            Қазақша
-                        </option>
-
-                        <option value="ru">
-                            Русский
-                        </option>
-
-                        <option value="en">
-                            English
-                        </option>
-
-                    </select>
-
-                </label>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    class="secondary-button"
-                    data-close-modal="profileModal"
-                    type="button"
-                >
-                    Болдырмау
-                </button>
-
-
-                <button
-                    id="saveProfileBtn"
-                    class="primary-button"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-check"></i>
-
-                    Сақтау
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         MEMORY MODAL
-    ====================================================== -->
-
-    <div
-        id="memoryModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-window small-modal">
-
-            <div class="modal-header">
-
-                <div>
-
-                    <span class="modal-eyebrow">
-                        AI MEMORY
-                    </span>
-
-                    <h2>
-                        Жаңа Memory
-                    </h2>
-
-                </div>
-
-
-                <button
-                    class="modal-close-button"
-                    data-close-modal="memoryModal"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                </button>
-
-            </div>
-
-
-            <div class="memory-form">
-
-                <label class="form-label">
-
-                    Санат
-
-                    <select
-                        id="memoryCategoryInput"
-                        class="form-input"
-                    >
-
-                        <option value="personal">
-                            Жеке ақпарат
-                        </option>
-
-                        <option value="interest">
-                            Қызығушылық
-                        </option>
-
-                        <option value="work">
-                            Жұмыс
-                        </option>
-
-                        <option value="study">
-                            Оқу
-                        </option>
-
-                        <option value="other">
-                            Басқа
-                        </option>
-
-                    </select>
-
-                </label>
-
-
-                <label class="form-label">
-
-                    Ақпарат
-
-                    <textarea
-                        id="memoryValueInput"
-                        class="form-input"
-                        rows="4"
-                        placeholder="Мысалы: Мен веб-сайт жасауды ұнатамын"
-                    ></textarea>
-
-                </label>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    class="secondary-button"
-                    data-close-modal="memoryModal"
-                    type="button"
-                >
-                    Болдырмау
-                </button>
-
-
-                <button
-                    id="saveMemoryBtn"
-                    class="primary-button"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-brain"></i>
-
-                    Жадқа сақтау
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         AI VOICE MODAL
-    ====================================================== -->
-
-    <div
-        id="voiceModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-window voice-modal">
-
-            <div class="modal-header centered">
-
-                <button
-                    class="modal-close-button"
-                    data-close-modal="voiceModal"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                </button>
-
-            </div>
-
-
-            <div class="voice-call-content">
-
-                <div
-                    id="voiceAvatar"
-                    class="voice-avatar"
-                >
-
-                    <div class="voice-avatar-pulse"></div>
-
-                    <div class="voice-avatar-inner">
-                        A
-                    </div>
-
-                </div>
-
-
-                <h2>
-                    Аружан
-                </h2>
-
-
-                <span
-                    id="voiceCallStatus"
-                    class="voice-call-status"
-                >
-                    Тыңдап тұрмын...
-                </span>
-
-
-                <div class="voice-waveform">
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
-                </div>
-
-
-                <div class="voice-call-actions">
-
-                    <button
-                        id="voiceMuteBtn"
-                        class="voice-action"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-microphone"></i>
-
-                    </button>
-
-
-                    <button
-                        id="voiceEndBtn"
-                        class="voice-action danger"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-phone-slash"></i>
-
-                    </button>
-
-
-                    <button
-                        id="voiceSpeakerBtn"
-                        class="voice-action"
-                        type="button"
-                    >
-
-                        <i class="fa-solid fa-volume-high"></i>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         NOTIFICATION PANEL
-    ====================================================== -->
-
-    <div
-        id="notificationPanel"
-        class="floating-panel notification-panel hidden"
-    >
-
-        <div class="floating-panel-header">
-
-            <h3>
-                Хабарламалар
-            </h3>
-
-            <button
-                id="markNotificationsReadBtn"
-                class="text-button"
-                type="button"
-            >
-                Барлығын оқылды деп белгілеу
-            </button>
-
-        </div>
-
-
-        <div
-            id="notificationList"
-            class="notification-list"
-        >
-
-            <div class="notification-item unread">
-
-                <div class="notification-item-icon">
-                    <i class="fa-solid fa-sparkles"></i>
-                </div>
-
-                <div class="notification-item-content">
-
-                    <strong>
-                        ARUZHAN AI дайын
-                    </strong>
-
-                    <span>
-                        Жаңа мүмкіндіктерді пайдаланып көріңіз.
-                    </span>
-
-                    <small>
-                        Қазір
-                    </small>
-
-                </div>
-
-            </div>
-
-
-            <div class="notification-item unread">
-
-                <div class="notification-item-icon">
-                    <i class="fa-solid fa-brain"></i>
-                </div>
-
-                <div class="notification-item-content">
-
-                    <strong>
-                        Memory қосулы
-                    </strong>
-
-                    <span>
-                        Аружан сіздің маңызды ақпараттарыңызды есте сақтай алады.
-                    </span>
-
-                    <small>
-                        Бүгін
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         GLOBAL SEARCH MODAL
-    ====================================================== -->
-
-    <div
-        id="globalSearchModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-window search-modal">
-
-            <div class="global-search-input-wrapper">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input
-                    id="globalSearchInput"
-                    type="search"
-                    placeholder="Чаттарды, хабарламаларды іздеу..."
-                    autocomplete="off"
-                >
-
-                <button
-                    class="modal-close-button"
-                    data-close-modal="globalSearchModal"
-                    type="button"
-                >
-
-                    <i class="fa-solid fa-xmark"></i>
-
-                </button>
-
-            </div>
-
-
-            <div
-                id="globalSearchResults"
-                class="global-search-results"
-            >
-
-                <div class="search-empty-state">
-
-                    <i class="fa-solid fa-magnifying-glass"></i>
-
-                    <h3>
-                        Іздеу
-                    </h3>
-
-                    <p>
-                        Чаттар мен хабарламаларды іздеу үшін
-                        жоғарыдағы іздеу жолағын пайдаланыңыз.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         CONFIRMATION MODAL
-    ====================================================== -->
-
-    <div
-        id="confirmModal"
-        class="modal hidden"
-        role="dialog"
-        aria-modal="true"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-window small-modal">
-
-            <div class="confirmation-content">
-
-                <div class="confirmation-icon danger-icon">
-
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-
-                </div>
-
-
-                <h2 id="confirmTitle">
-                    Растау қажет
-                </h2>
-
-
-                <p id="confirmMessage">
-                    Бұл әрекетті орындауға сенімдісіз бе?
-                </p>
-
-
-                <div class="confirmation-actions">
-
-                    <button
-                        id="confirmCancelBtn"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Болдырмау
-                    </button>
-
-
-                    <button
-                        id="confirmActionBtn"
-                        class="danger-button"
-                        type="button"
-                    >
-                        Растау
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         TOAST NOTIFICATIONS
-    ====================================================== -->
-
-    <div
-        id="toastContainer"
-        class="toast-container"
-        aria-live="polite"
-        aria-atomic="true"
-    >
-
-        <!-- Dynamic toasts -->
-
-    </div>
-
-
-    <!-- =====================================================
-         FULLSCREEN LOADER
-    ====================================================== -->
-
-    <div
-        id="appLoader"
-        class="app-loader"
-    >
-
-        <div class="loader-content">
-
-            <div class="loader-logo">
-                A
-            </div>
-
-            <div class="loader-spinner"></div>
-
-            <h2>
-                ARUZHAN AI
-            </h2>
-
-            <p>
-                AI Companion іске қосылуда...
-            </p>
-
-        </div>
-
-    </div>
-
-
-</div>
-
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
-<script src="app.js"></script>
+    </script>
 
 </body>
+
 </html>
