@@ -8,7 +8,7 @@
     <style>
         :root {
             --bg-main: linear-gradient(135deg, #0f172a, #1e1b4b, #31103f);
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-bg: rgba(30, 41, 59, 0.75);
             --accent-pink: #ec4899;
             --accent-blue: #6366f1;
             --text-main: #f8fafc;
@@ -34,7 +34,7 @@
 
         .chat-app {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             height: 92vh;
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -42,14 +42,14 @@
             border-radius: 28px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
             overflow: hidden;
         }
 
         /* Header */
         .chat-header {
             padding: 16px 20px;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.9);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
@@ -67,14 +67,14 @@
         }
 
         .avatar {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 16px;
             background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: white;
             box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
         }
@@ -91,14 +91,14 @@
         }
 
         .brand-text h1 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 700;
         }
 
         .brand-text p {
             font-size: 0.78rem;
             color: var(--accent-pink);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .header-controls {
@@ -110,11 +110,12 @@
             background: #0f172a;
             color: var(--text-main);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 10px;
-            border-radius: 10px;
+            padding: 7px 12px;
+            border-radius: 12px;
             font-size: 0.8rem;
             outline: none;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .mode-btn {
@@ -124,6 +125,40 @@
             font-weight: 600;
         }
 
+        /* Voice Control Panel */
+        .voice-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .voice-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         /* Chat Body */
         .chat-body {
             flex: 1;
@@ -131,13 +166,13 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 16px;
         }
 
         .msg-row {
             display: flex;
             gap: 10px;
-            max-width: 85%;
+            max-width: 88%;
         }
 
         .msg-row.user {
@@ -146,10 +181,10 @@
         }
 
         .bubble {
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 0.92rem;
-            line-height: 1.45;
+            padding: 14px 18px;
+            border-radius: 20px;
+            font-size: 0.94rem;
+            line-height: 1.5;
         }
 
         .bot .bubble {
@@ -166,7 +201,7 @@
         .time {
             font-size: 0.65rem;
             color: var(--text-sub);
-            margin-top: 4px;
+            margin-top: 6px;
             display: block;
         }
 
@@ -183,7 +218,7 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e2e8f0;
-            padding: 6px 14px;
+            padding: 7px 14px;
             border-radius: 18px;
             font-size: 0.8rem;
             white-space: nowrap;
@@ -199,7 +234,7 @@
         /* Footer */
         .chat-footer {
             padding: 14px 18px;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -208,7 +243,7 @@
             align-items: center;
             background: rgba(255, 255, 255, 0.07);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 4px 8px;
         }
 
@@ -219,21 +254,21 @@
             outline: none;
             color: white;
             padding: 10px;
-            font-size: 0.92rem;
+            font-size: 0.95rem;
         }
 
         .icon-btn {
             background: transparent;
             border: none;
             color: var(--text-sub);
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: 0.2s;
         }
 
@@ -274,7 +309,7 @@
             </div>
         </div>
         <div class="header-controls">
-            <button class="mode-btn" onclick="toggleMode()" id="modeBtn">🏛️ Мем. Режим</button>
+            <button class="mode-btn" onclick="toggleMode()" id="modeBtn">🏛️ Ұлттық Жоба</button>
             <select id="langSelect" onchange="changeLang()">
                 <option value="kk">ҚАЗ</option>
                 <option value="ru">РУС</option>
@@ -283,25 +318,36 @@
         </div>
     </div>
 
+    <!-- Дауысты басқару панелі -->
+    <div class="voice-controls">
+        <span id="voiceStatus">🎙️ Дауыс: Батырманы басқанда ғана қосылады</span>
+        <div class="voice-btn-group">
+            <button class="ctrl-btn" onclick="stopSpeech()"><i class="fa-solid fa-volume-xmark"></i> Дыбысты өшіру</button>
+            <button class="ctrl-btn" onclick="repeatLastSpeech()"><i class="fa-solid fa-rotate-right"></i> Қайталап оқу</button>
+        </div>
+    </div>
+
     <!-- Чат аймағы -->
     <div class="chat-body" id="chatBody">
         <div class="msg-row bot">
             <div class="bubble" id="welcomeMsg">
-                Сәлем! Мен **Sabina AI**-мын. Қыздармен еркін сөйлесуді үйрену, сөз бастау, комплимент айту немесе психологиялық кеңес алу үшін маған жаза бер! Сондай-ақ жоғарғы батырмамен Мемлекеттік бағдарламалар режиміне де ауыса аласың.
+                Армысың, бауырым! Мен **Sabina AI**-мын. 
+                <br><br>
+                Қыздармен сөйлесуден жүрексінесің бе? Не деп жазарыңды білмей тұрсың ба? Әлде жай ғана іштегі сырыңды бөлісетін сырдас керек пе? Мен сенің сенімді әрі ынталы серігіңмін! 
+                <br><br>
+                Сондай-ақ, жоғарыдағы **«Ұлттық Жоба»** батырмасын басып, бойдақ әрі ұяң жігіттерді қолдауға арналған Арнайы Мемлекеттік Концепция режиміне өте аласың!
                 <span class="time" id="initTime"></span>
             </div>
         </div>
     </div>
 
     <!-- Тез сұрақ қою чиптері -->
-    <div class="quick-chips" id="quickChips">
-        <!-- Ауысып отырады -->
-    </div>
+    <div class="quick-chips" id="quickChips"></div>
 
     <!-- Енгізу аймағы -->
     <div class="chat-footer">
         <div class="input-box">
-            <button class="icon-btn" id="micBtn" onclick="toggleVoice()" title="Дауыспен енгізу">
+            <button class="icon-btn" id="micBtn" onclick="toggleVoice()" title="Тек басқанда тыңдайды">
                 <i class="fa-solid fa-microphone"></i>
             </button>
             <input type="text" id="userInput" placeholder="Хабарлама жазыңыз..." onkeypress="handleKeyPress(event)">
@@ -315,41 +361,82 @@
 <script>
     document.getElementById('initTime').innerText = getTime();
 
-    // Режимдер: 'dating' немесе 'gov'
     let currentMode = 'dating'; 
     let isListening = false;
     let recognition;
+    let lastBotReply = "";
 
-    // Шынайы дауыс тану
+    // Web Speech API - Дауыспен тану
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
-        recognition.continuous = false;
+        recognition.continuous = false; 
 
         recognition.onresult = function(e) {
             document.getElementById('userInput').value = e.results[0][0].transcript;
-            toggleVoice();
+            stopListening();
             sendMessage();
         };
 
-        recognition.onerror = function() { toggleVoice(); };
+        recognition.onerror = function() { stopListening(); };
+        recognition.onend = function() { stopListening(); };
+    }
+
+    function toggleVoice() {
+        if (!recognition) return alert('Браузеріңіз дауыспен енгізуді қолдамайды.');
+
+        if (!isListening) {
+            startListening();
+        } else {
+            stopListening();
+        }
+    }
+
+    function startListening() {
+        const lang = document.getElementById('langSelect').value;
+        recognition.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
+        recognition.start();
+        isListening = true;
+        document.getElementById('micBtn').classList.add('mic-active');
+        document.getElementById('voiceStatus').innerText = "🎙️ AI сені тыңдап тұр... Айта бер!";
+    }
+
+    function stopListening() {
+        if (recognition && isListening) {
+            recognition.stop();
+        }
+        isListening = false;
+        document.getElementById('micBtn').classList.remove('mic-active');
+        document.getElementById('voiceStatus').innerText = "🎙️ Дауыс: Батырманы басқанда ғана қосылады";
+    }
+
+    function stopSpeech() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    function repeatLastSpeech() {
+        if (lastBotReply !== "") {
+            speak(lastBotReply);
+        }
     }
 
     function renderChips() {
         const container = document.getElementById('quickChips');
         if (currentMode === 'dating') {
             container.innerHTML = `
-                <div class="chip" onclick="sendQuick('Қызға бірінші не деп жазсам болады?')">💌 Не деп жазсам болады?</div>
-                <div class="chip" onclick="sendQuick('Кездесуге қалай шақырамын?')">☕ Кездесуге шақыру</div>
-                <div class="chip" onclick="sendQuick('Әдемі комплимент айтып берші')">💖 Комплименттер</div>
-                <div class="chip" onclick="sendQuick('Өзіме сенімділікті қалай арттырам?')">🔥 Сенімділік</div>
+                <div class="chip" onclick="sendQuick('Қызға бірінші болып не деп жазсам болады?')">💌 Алғашқы хабарлама шаблоны</div>
+                <div class="chip" onclick="sendQuick('Қызды кездесуге қалай тартымды шақырамын?')">☕ Кездесуге шақыру тактикасы</div>
+                <div class="chip" onclick="sendQuick('Маған мықты комплимент айтуды үйретші')">💖 Комплимент шеберлігі</div>
+                <div class="chip" onclick="sendQuick('Қыздармен сөйлескендегі қорқынышты қалай жеңемін?')">🔥 Сенімділік формуласы</div>
             `;
         } else {
             container.innerHTML = `
-                <div class="chip" onclick="sendQuick('Жастарға арналған мемлекеттік бағдарламалар')">🏢 Жастар бағдарламасы</div>
-                <div class="chip" onclick="sendQuick('Отбасын қолдау және баспана')">🏠 Тұрғын үй жеңілдігі</div>
-                <div class="chip" onclick="sendQuick('Жастар кадрлық резерві деген не?')">🎓 Кадрлық резерв</div>
-                <div class="chip" onclick="sendQuick('Түсініктеме / Заңнамалық кеңес')">⚖️ Заңнамалық консультация</div>
+                <div class="chip" onclick="sendQuick('Жігіттерді қолдау ұлттық бағдарламасы деген не?')">🏛️ Ұлттық Жоба мақсаты</div>
+                <div class="chip" onclick="sendQuick('Бойдақ жігіттерге мемлекеттік әлеуметтік көмектер')">🏠 Баспана және гранттар</div>
+                <div class="chip" onclick="sendQuick('Ұяңдық пен коммуникацияны дамыту регламенті')">🎯 Психологиялық реабилитация</div>
+                <div class="chip" onclick="sendQuick('Отбасын құруды ынталандыру мемлекеттік стандарты')">💍 Отбасылық қолдау</div>
             `;
         }
     }
@@ -357,43 +444,31 @@
     renderChips();
 
     function toggleMode() {
+        stopSpeech();
         const status = document.getElementById('modeStatus');
         const modeBtn = document.getElementById('modeBtn');
         const avatarIcon = document.getElementById('avatarIcon');
 
         if (currentMode === 'dating') {
             currentMode = 'gov';
-            status.innerText = "🏛️ Мемлекеттік & Әлеуметтік Модуль";
+            status.innerText = "🏛️ Жігіттерді Қолдау Ұлттық Жобасы";
             status.style.color = "#818cf8";
             modeBtn.innerText = "💖 AI Серік Режимі";
             avatarIcon.innerHTML = '<i class="fa-solid fa-building-columns"></i>';
-            addMessage("Режим ауысты. Енді мен мемлекеттік бағдарламалар, жастар саясаты және әлеуметтік қолдау бойынша ресми консультантпын.", 'bot');
+            const msg = "🏛️ **Режим Ауысты:** 'Жігіттерді коммуникациялық және әлеуметтік қолдау' ұлттық мемлекеттік концепциясына қош келдіңіз! Бұл бағдарлама — бойдақ, ұяң, қыздармен тіл табысуда қиналатын азаматтарға кешенді әлеуметтік, психологиялық және коммуникациялық көмек беру стандарты болып табылады.";
+            addMessage(msg, 'bot');
+            speak(msg);
         } else {
             currentMode = 'dating';
             status.innerText = "💖 AI Серік & Танысу";
             status.style.color = "#ec4899";
-            modeBtn.innerText = "🏛️ Мем. Режим";
+            modeBtn.innerText = "🏛️ Ұлттық Жоба";
             avatarIcon.innerHTML = '<i class="fa-solid fa-heart"></i>';
-            addMessage("Режим ауысты! Мен қайтадан сенің AI серігіңмін. Танысу, сөйлесу немесе көңіл-күй бойынша не талқылаймыз?", 'bot');
+            const msg = "💖 **Режим Ауысты!** Мен қайтадан сенің жеке AI-серігің және кеңесшіңмін. Қандай да бір қызға ғашық болып жүрсің бе, әлде көңіл-күйіңді көтергің келе ме? Маған бәрін ашық айта бер!";
+            addMessage(msg, 'bot');
+            speak(msg);
         }
         renderChips();
-    }
-
-    function toggleVoice() {
-        const btn = document.getElementById('micBtn');
-        if (!recognition) return alert('Браузеріңіз дауысты қолдамайды.');
-
-        if (!isListening) {
-            const lang = document.getElementById('langSelect').value;
-            recognition.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
-            recognition.start();
-            isListening = true;
-            btn.classList.add('mic-active');
-        } else {
-            recognition.stop();
-            isListening = false;
-            btn.classList.remove('mic-active');
-        }
     }
 
     function sendMessage() {
@@ -406,6 +481,7 @@
 
         setTimeout(() => {
             const reply = getAIResponse(text);
+            lastBotReply = reply;
             addMessage(reply, 'bot');
             speak(reply);
         }, 600);
@@ -420,9 +496,13 @@
         const body = document.getElementById('chatBody');
         const row = document.createElement('div');
         row.className = `msg-row ${sender}`;
+        
+        // Тексттегі **форматтарды** әдемі көрсету
+        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
         row.innerHTML = `
             <div class="bubble">
-                ${text}
+                ${formattedText}
                 <span class="time">${getTime()}</span>
             </div>
         `;
@@ -439,10 +519,14 @@
     }
 
     function speak(text) {
+        stopSpeech();
         if ('speechSynthesis' in window) {
-            const ut = new SpeechSynthesisUtterance(text);
+            // Текстік белгілерді дауыстап оқымау үшін тазалаймыз
+            let cleanText = text.replace(/\*\*/g, '').replace(/<[^>]*>?/gm, '');
+            const ut = new SpeechSynthesisUtterance(cleanText);
             const lang = document.getElementById('langSelect').value;
             ut.lang = lang === 'kk' ? 'kk-KZ' : (lang === 'ru' ? 'ru-RU' : 'en-US');
+            ut.rate = 0.95; // Сәл табиғи ақырын оқу
             window.speechSynthesis.speak(ut);
         }
     }
@@ -451,24 +535,27 @@
         const t = msg.toLowerCase();
 
         if (currentMode === 'dating') {
-            if (t.includes('жазсам') || t.includes('бірінші') || t.includes('таныс')) {
-                return "Қызға бірінші болып 'Сәлем, қалайсың?' десең, жауап алмауың мүмкін. Одан да оның суретінен немесе сторисінен бір қызық детальды тауып алып, сұрақ қой. Мысалы: 'Мына жер қай жер? Аурасы керемет екен!' — бұл диалогты оңай бастайды!";
+            if (t.includes('жазсам') || t.includes('бірінші') || t.includes('таныс') || t.includes('шаблон')) {
+                return "**Алғашқы қадам жасау тактикасы:**\n\nБауырым, ешқашан стандартты 'Сәлем, қалайсың?' деп жазба. Бұл зеріктіреді. Ең тиімдісі — **Сұрақ + Комплимент** әдісі.\n\n**Сценарий 1 (Сторисіне жазу):** 'Мына жердің атмосферасы керемет екен! Бұл қай кафе? Сенің талғамың өте жоғары екен 🌟'\n\n**Сценарий 2 (Профиль суретіне жазу):** 'Сенің мына суретіңнен ерекше бір позитивті энергия сезіледі екен. Күнің сәтті өтсің!'\n\nЕсіңде болсын: Табиғи бол әрі жауапты ұзақ күтсең де, қысылма!";
             } else if (t.includes('кездесу') || t.includes('шақыру')) {
-                return "Кездесуге шақырғанда нақты бол! 'Бірде кофе ішейік' демей, 'Сәрсенбіде сағат 19:00-де бос болсаң, жаңа кофеханаға барып қайтайық' де. Сенімділік қыздарға өте ұнайды.";
+                return "**Кездесуге шақырудың алтын ережесі:**\n\nЕшқашан 'Бірде бос болсаң серуендейікші' деп белгісіз сөйлеме. Сенімді азамат нақты ұсыныс жасайды!\n\n**Керемет үлгі:** 'Сәлем! Бейсенбіде сағат 19:00-де менің сүйікті кофеханамда дәмді десерт ішіп, жақсылап сөйлесейік. Сені кім жеткізіп тастасын немесе қай жерден күтіп алайын?'\n\nБұл сөзден сенің жауапкершілігің мен сенімділігің айқын көрінеді!";
             } else if (t.includes('комплимент')) {
-                return "Ең жақсы комплимент — сырт келбетке ғана емес, оның талғамына, күлкісіне немесе киім стиліне айтылған сөз. Мысалы: 'Сенің киім таңдау талғамың ерекше екен' немесе 'Күлкің айналаны жарық қылып жібереді екен'.";
+                return "**Шебер комплимент құпиясы:**\n\nҚыздар өздеріне айтылған әрбір сөздің шынайылығын бірден сезеді. Тек 'әдемісің' дей бермей, оның **детальдарына** назар аудар:\n\n1. 'Сенің дауысың өте жағымды екен, тыңдай бергім келеді.'\n2. 'Сенің күлкің айналаның бәрін жарық қылып жибереді екен!'\n3. 'Сенің ойлау жүйең мен стилің маған қатты ұнайды, өте ерекшесің.'";
+            } else if (t.includes('сенім') || t.includes('қорқыныш') || t.includes('ұяң')) {
+                return "**Өзіңе сенімділікті арттыру:**\n\nЕсіңде болсын: Қыз баласы да сен сияқты адам. Ол да толқыйды, ол да жақсы қарым-қатынасты қалайды! Сен өзіңді төмен ұстама. Иығыңды тік ұста, терең тыныс ал және іштей 'Мен өзіме сенімдімін, мен қызықты азаматпын' деп қайтала. Тәжірибе жинаған сайын бұл қорқыныш мүлдем жойылады!";
             } else {
-                return "Өте жақсы! Ең бастысы — табиғи бол, жасандылықсыз сөйлес. Мен сенің сенімді AI-серігің ретінде кез келген сәтте көмектесуге дайынмын 💖";
+                return "Бауырым, сені өте жақсы түсініп тұрмын! Сенің әрбір қадамың — бұл үлкен тәжірибе. Маған ішіңдегі кез келген сұрағыңды қоя бер, мен саған әрдайым ең дұрыс бағытты көрсетуге дайынмын 💖";
             }
         } else {
-            if (t.includes('жастар') || t.includes('бағдарлама')) {
-                return "ҚР Жастар саясаты шеңберінде: 'Жасыл ел', 'Серпін', 'Жұмысшы жастарға жалға берілатін баспана' және 'Жастар практикасы' сияқты бағдарламалар жұмыс істейді. Қайсысы туралы толығырақ білгіңіз келеді?";
-            } else if (t.includes('баспана') || t.includes('үй') || t.includes('отбасы')) {
-                return "Жас отбасылар мен жастар үшін Отбасы банк арқылы 'Елорда жастары', 'Алматы жастары' және '30/70' жеңілдетілген заемы арқылы тұрғын үй алу мүмкіндіктері қарастырылған.";
-            } else if (t.includes('резерв')) {
-                return "Президенттік жастар кадрлық резерві — дарынды жастарды мемлекеттік басқару жүйесіне тартуға арналған маңызды жоба. Іріктеу бірнеше кезеңнен тұрады.";
+            // Мемлекеттік Ұлттық Жоба Режимі
+            if (t.includes('ұлттық жоба') || t.includes('бағдарлама') || t.includes('деген не')) {
+                return "**«Жігіттерді Коммуникациялық Қолдау» Ұлттық Концепциясы:**\n\nБұл — елдегі жас азаматтардың әлеуметтік-психологиялық жағдайын жақсартуға, ұяңдықты еңсеруге және салауатты отбасылық құндылықтарды қалыптастыруға арналған **Ресми AI-Бағдарлама**.\n\n**Негізгі бағыттар:**\n1. Социофобия мен ұяңдықты жою;\n2. Отбасын құру мәдениетін ынталандыру;\n3. Коммуникативті интеллектуалды дамыту.";
+            } else if (t.includes('баспана') || t.includes('грант') || t.includes('көмек')) {
+                return "**Жас Отбасылар мен Азаматтарға Мемлекеттік Жеңілдіктер:**\n\nҰлттық бағдарлама шеңберінде жас жігіттерге арналған келесі мемлекеттік қолдау тетіктері қарастырылған:\n\n• **'Отбасы Банк' жеңілдетілген 2% және 5% тұрғын үй заемы;**\n• **Жас кәсіпкерлерге арналған 1.382.000 тг қайтарымсыз гранттар;**\n• **Жұмысшы жастарға жалға берілетін баспана бағдарламасы.**";
+            } else if (t.includes('психолог') || t.includes('реабилитация') || t.includes('стандарт')) {
+                return "**Коммуникацияны дамытудың Мемлекеттік Стандарты:**\n\nБағдарлама аясында әрбір азамат жүйелі түрде оқытудан өтеді:\n- Әлеуметтік ортада өзін ұстау протоколы;\n- Стресске төзімділік және конфликтіні шешу;\n- Тікелей вербалды және нон-вербалды қарым-қатынас дағдылары.";
             } else {
-                return "Сұранысыңыз мемлекеттік нормативтік база бойынша өңделді. Жастарды әлеуметтік қолдау бойынша кез келген қосымша ақпаратты беруге дайынмын.";
+                return "ҚР Мемлекеттік Жастар Саясатының нормативтік стандарты аясында сұранысыңыз өңделді. Бойдақ азаматтарды әлеуметтік, тұрмыстық және психологиялық қолдау бойынша кез келген ресми ақпаратты алуға болады.";
             }
         }
     }
