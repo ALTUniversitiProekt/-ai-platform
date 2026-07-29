@@ -1,0 +1,15 @@
+{
+  "name": "aruzhan-ai-backend",
+  "version": "1.0.0",
+  "description": "ARUZHAN AI Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "openai": "^5.0.0"
+  }
+}
