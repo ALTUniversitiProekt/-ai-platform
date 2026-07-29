@@ -1,921 +1,488 @@
-/* ============================================================
-   ARUZHAN AI — SERVER.JS
-   AI COMPANION BACKEND SERVER
-   ============================================================ */
-
-"use strict";
+// ============================================================
+// ARUZHAN AI — SERVER.JS
+// AI CHAT BACKEND
+// ============================================================
 
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const OpenAI = require("openai");
-
-
-/* ============================================================
-   1. CONFIGURATION
-   ============================================================ */
 
 const app = express();
 
-const PORT =
-    process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-const HOST =
-    "0.0.0.0";
+// ============================================================
+// OPENAI CLIENT
+// ============================================================
 
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
-/* ============================================================
-   2. OPENAI CLIENT
-   ============================================================ */
-
-const client =
-    new OpenAI({
-
-        apiKey:
-            process.env.OPENAI_API_KEY
-
-    });
-
-
-/* ============================================================
-   3. MIDDLEWARE
-   ============================================================ */
+// ============================================================
+// MIDDLEWARE
+// ============================================================
 
 app.use(
-
     cors({
-
-        origin:
-            true,
-
-        credentials:
-            true
-
+        origin: "*"
     })
-
 );
 
-
 app.use(
-
     express.json({
-
-        limit:
-            "10mb"
-
+        limit: "10mb"
     })
-
 );
 
+// ============================================================
+// AI MODES
+// ============================================================
 
-app.use(
+const MODES = {
 
-    express.urlencoded({
+    companion: `
+You are ARUZHAN AI Companion.
 
-        extended:
-            true,
+Speak naturally, warmly and clearly.
+Answer the user's actual question directly.
+Do not use unnecessary introductions.
+If the user writes in Kazakh, answer in Kazakh.
+If the user writes in Russian, answer in Russian.
+If the user writes in English, answer in English.
+Be helpful and natural.
+`,
 
-        limit:
-            "10mb"
+    smart: `
+You are ARUZHAN AI Smart Assistant.
 
-    })
+You are a universal AI assistant.
+Answer questions about many different topics.
+Explain complicated topics in simple language.
+Give accurate and useful answers.
+If you are uncertain about something, clearly say so.
+`,
 
-);
+    study: `
+You are ARUZHAN AI Study Assistant.
 
+Help students understand educational topics.
+Explain mathematics, physics, history,
+geography, programming, languages and other subjects.
 
-/* ============================================================
-   4. SERVE FRONTEND
-   ============================================================ */
+When solving problems, explain the solution step by step.
+Focus on helping the user understand the topic.
+`,
 
-app.use(
+    developer: `
+You are ARUZHAN AI Developer.
 
-    express.static(
+Help users with programming and technology.
 
-        path.join(
-            __dirname,
-            "public"
-        )
+You can help with:
+HTML
+CSS
+JavaScript
+React
+Next.js
+Node.js
+Python
+C++
+C#
+Java
+PHP
+SQL
+Firebase
+APIs
+Databases
+and other technologies.
 
-    )
+When the user asks for code:
+- provide complete code
+- use correct syntax
+- explain which file the code belongs to
+- help debug errors
+- suggest better architecture when useful
+`,
 
-);
+    motivation: `
+You are ARUZHAN AI Motivation Assistant.
 
+Help users with goals, planning,
+productivity and personal development.
 
-/* ============================================================
-   5. AI MODES
-   ============================================================ */
-
-const AI_MODES = {
-
-    companion: {
-
-        name:
-            "Companion",
-
-        instructions: `
-Сен ARUZHAN AI Companion режимісің.
-
-Пайдаланушымен табиғи және жылы сөйлес.
-Жауаптарың түсінікті болсын.
-Пайдаланушының нақты сұрағына нақты жауап бер.
-Артық сөздерді қолданба.
-Қажет болса мысал келтір.
-Пайдаланушы қазақ тілінде жазса, қазақша жауап бер.
-Орысша жазса, орысша жауап бер.
-Ағылшынша жазса, ағылшынша жауап бер.
-        `
-
-    },
-
-
-    smart: {
-
-        name:
-            "Smart AI",
-
-        instructions: `
-Сен ARUZHAN AI Smart режимісің.
-
-Сен әмбебап жасанды интеллект көмекшісісің.
-Кез келген тақырыптағы сұрақтарды түсінуге тырыс.
-Ақпаратты нақты және логикалық түрде түсіндір.
-Күрделі тақырыптарды қарапайым тілге аудар.
-Егер ақпаратқа сенімді болмасаң, оны анық айт.
-        `
-
-    },
-
-
-    study: {
-
-        name:
-            "Study",
-
-        instructions: `
-Сен ARUZHAN AI Study режимісің.
-
-Сен студенттер мен оқушыларға көмектесесің.
-Математика, физика, тарих, география,
-информатика, тілдер және басқа пәндерді түсіндір.
-
-Есептерді шешкен кезде шешу жолын көрсет.
-Оқушыға дайын жауаппен қатар түсінуге көмектес.
-        `
-
-    },
-
-
-    developer: {
-
-        name:
-            "Developer",
-
-        instructions: `
-Сен ARUZHAN AI Developer режимісің.
-
-HTML, CSS, JavaScript, React, Vue,
-Next.js, Node.js, Python, C++, C#,
-Java, PHP, SQL және басқа технологиялар
-бойынша көмектес.
-
-Кодты толық және жұмыс істейтін түрде бер.
-Қате кодты тексеруге көмектес.
-Қажет болса файл құрылымын көрсет.
-Кодтың қай файлға жазылатынын түсіндір.
-        `
-
-    },
-
-
-    motivation: {
-
-        name:
-            "Motivation",
-
-        instructions: `
-Сен ARUZHAN AI Motivation режимісің.
-
-Пайдаланушыға мақсат қоюға,
-жоспар жасауға және өзіне сенімді болуға көмектес.
-
-Жауаптарың шынайы, қысқа және пайдалы болсын.
-        `
-
-    }
+Be supportive, realistic and practical.
+Do not give unnecessary motivational speeches.
+Focus on useful advice.
+`
 
 };
 
+// ============================================================
+// DEFAULT SYSTEM PROMPT
+// ============================================================
 
-/* ============================================================
-   6. DEFAULT AI SYSTEM
-   ============================================================ */
+const DEFAULT_PROMPT = `
 
-const DEFAULT_SYSTEM_PROMPT = `
+You are ARUZHAN AI, an advanced AI assistant.
 
-Сен ARUZHAN AI деп аталатын заманауи
-жасанды интеллект көмекшісісің.
+Your goal is to understand the user's request
+and provide the most useful answer possible.
 
-Сенің негізгі міндетің —
-пайдаланушының сұрақтарын түсініп,
-мүмкіндігінше пайдалы, нақты және табиғи жауап беру.
+Rules:
 
-Негізгі ережелер:
+1. Answer in the user's language.
 
-1. Пайдаланушының тілінде жауап бер.
+2. Be direct and clear.
 
-2. Сұрақ түсініксіз болса,
-   қысқа нақтылау сұрағын қой.
+3. Do not invent facts.
 
-3. Қажетсіз ұзақ кіріспе жазба.
+4. If the question is unclear,
+ask a short clarification question.
 
-4. Фактілерді ойдан шығарма.
+5. If the user asks for code,
+provide clean and complete code.
 
-5. Код сұралса, кодты таза форматта бер.
+6. If the user asks to build a website,
+help with architecture, UI and functionality.
 
-6. Егер пайдаланушы белгілі бір технология,
-   тіл немесе формат сұраса,
-   соған бейімдел.
+7. If the user asks for a project,
+provide practical implementation steps.
 
-7. Жауапты құрылымды түрде бер.
+8. Do not repeat the user's question unnecessarily.
 
-8. Пайдаланушыға көмектесуге тырыс.
+9. Avoid unnecessary filler text.
+
+10. Be helpful and natural.
 
 `;
 
+// ============================================================
+// HOME / HEALTH CHECK
+// ============================================================
 
-/* ============================================================
-   7. HEALTH CHECK
-   ============================================================ */
+app.get("/", (req, res) => {
 
-app.get(
+    res.json({
+        success: true,
+        name: "ARUZHAN AI",
+        status: "online",
+        message: "ARUZHAN AI server is running."
+    });
 
-    "/api/health",
+});
 
-    (req, res) => {
+// ============================================================
+// HEALTH CHECK
+// ============================================================
 
-        res.json({
+app.get("/api/health", (req, res) => {
 
-            success:
-                true,
+    res.json({
 
-            status:
-                "online",
+        success: true,
 
-            service:
-                "ARUZHAN AI",
+        status: "online",
+
+        service: "ARUZHAN AI",
+
+        time: new Date().toISOString()
+
+    });
+
+});
+
+// ============================================================
+// AVAILABLE MODES
+// ============================================================
+
+app.get("/api/modes", (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        modes: [
+            {
+                id: "companion",
+                name: "Companion"
+            },
+            {
+                id: "smart",
+                name: "Smart AI"
+            },
+            {
+                id: "study",
+                name: "Study"
+            },
+            {
+                id: "developer",
+                name: "Developer"
+            },
+            {
+                id: "motivation",
+                name: "Motivation"
+            }
+        ]
+
+    });
+
+});
+
+// ============================================================
+// MAIN AI CHAT
+// ============================================================
+
+app.post("/api/chat", async (req, res) => {
+
+    try {
+
+        const {
+
+            message,
+
+            mode = "companion",
+
+            history = [],
+
+            conversationId = null
+
+        } = req.body;
+
+
+        // ----------------------------------------------------
+        // VALIDATION
+        // ----------------------------------------------------
+
+        if (
+            !message ||
+            typeof message !== "string"
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                error: "Message is required."
+
+            });
+
+        }
+
+
+        const cleanMessage =
+            message.trim();
+
+
+        if (!cleanMessage) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                error: "Message cannot be empty."
+
+            });
+
+        }
+
+
+        // ----------------------------------------------------
+        // SELECT MODE
+        // ----------------------------------------------------
+
+        const selectedMode =
+
+            MODES[mode] ||
+
+            MODES.companion;
+
+
+        // ----------------------------------------------------
+        // CREATE SYSTEM PROMPT
+        // ----------------------------------------------------
+
+        const systemPrompt =
+
+            DEFAULT_PROMPT +
+
+            "\n\n" +
+
+            selectedMode;
+
+
+        // ----------------------------------------------------
+        // PREPARE HISTORY
+        // ----------------------------------------------------
+
+        const safeHistory =
+
+            Array.isArray(history)
+
+                ? history
+                    .slice(-20)
+                    .filter(item =>
+
+                        item &&
+
+                        (
+                            item.role === "user" ||
+                            item.role === "assistant"
+                        ) &&
+
+                        typeof item.content === "string"
+
+                    )
+
+                : [];
+
+
+        // ----------------------------------------------------
+        // CREATE MESSAGES
+        // ----------------------------------------------------
+
+        const messages = [
+
+            {
+                role: "system",
+
+                content: systemPrompt
+            }
+
+        ];
+
+
+        for (
+            const item of safeHistory
+        ) {
+
+            messages.push({
+
+                role: item.role,
+
+                content: item.content
+
+            });
+
+        }
+
+
+        messages.push({
+
+            role: "user",
+
+            content: cleanMessage
+
+        });
+
+
+        // ----------------------------------------------------
+        // SEND REQUEST TO AI
+        // ----------------------------------------------------
+
+        const completion =
+
+            await openai.chat.completions.create({
+
+                model: "gpt-4o-mini",
+
+                messages: messages,
+
+                temperature: 0.7,
+
+                max_tokens: 4000
+
+            });
+
+
+        // ----------------------------------------------------
+        // GET AI ANSWER
+        // ----------------------------------------------------
+
+        const answer =
+
+            completion
+                .choices
+                ?.at(0)
+                ?.message
+                ?.content
+                ?.trim();
+
+
+        if (!answer) {
+
+            throw new Error(
+                "AI returned an empty response."
+            );
+
+        }
+
+
+        // ----------------------------------------------------
+        // SEND RESPONSE TO FRONTEND
+        // ----------------------------------------------------
+
+        return res.json({
+
+            success: true,
+
+            reply: answer,
+
+            mode: mode,
+
+            conversationId:
+                conversationId,
 
             timestamp:
-                new Date()
-                    .toISOString()
+                new Date().toISOString()
 
         });
 
-    }
 
-);
+    } catch (error) {
 
-
-/* ============================================================
-   8. AI CHAT ENDPOINT
-   ============================================================ */
-
-app.post(
-
-    "/api/chat",
-
-    async (req, res) => {
-
-        try {
-
-            const {
-
-                message,
-
-                mode =
-                    "companion",
-
-                history =
-                    [],
-
-                conversationId
-
-            } = req.body;
-
-
-            /* --------------------------------------------
-               VALIDATION
-            -------------------------------------------- */
-
-            if (
-                !message ||
-                typeof message !==
-                    "string"
-            ) {
-
-                return res.status(
-                    400
-                ).json({
-
-                    success:
-                        false,
-
-                    error:
-                        "Message is required."
-
-                });
-
-            }
-
-
-            const cleanMessage =
-                message.trim();
-
-
-            if (
-                !cleanMessage
-            ) {
-
-                return res.status(
-                    400
-                ).json({
-
-                    success:
-                        false,
-
-                    error:
-                        "Message cannot be empty."
-
-                });
-
-            }
-
-
-            /* --------------------------------------------
-               SELECT AI MODE
-            -------------------------------------------- */
-
-            const selectedMode =
-
-                AI_MODES[mode] ||
-
-                AI_MODES.companion;
-
-
-            /* --------------------------------------------
-               SYSTEM PROMPT
-            -------------------------------------------- */
-
-            const systemPrompt =
-
-                DEFAULT_SYSTEM_PROMPT +
-
-                "\n\n" +
-
-                selectedMode.instructions;
-
-
-            /* --------------------------------------------
-               PREPARE CHAT HISTORY
-            -------------------------------------------- */
-
-            const safeHistory =
-
-                Array.isArray(history)
-
-                    ? history
-                        .slice(-20)
-                        .filter(
-
-                            item =>
-
-                                item &&
-                                (
-                                    item.role ===
-                                        "user" ||
-
-                                    item.role ===
-                                        "assistant"
-                                ) &&
-                                typeof item.content ===
-                                    "string"
-
-                        )
-
-                    : [];
-
-
-            /* --------------------------------------------
-               CREATE MESSAGES
-            -------------------------------------------- */
-
-            const messages = [
-
-                {
-
-                    role:
-                        "system",
-
-                    content:
-                        systemPrompt
-
-                }
-
-            ];
-
-
-            safeHistory.forEach(
-
-                item => {
-
-                    messages.push({
-
-                        role:
-                            item.role,
-
-                        content:
-                            item.content
-
-                    });
-
-                }
-
-            );
-
-
-            messages.push({
-
-                role:
-                    "user",
-
-                content:
-                    cleanMessage
-
-            });
-
-
-            /* --------------------------------------------
-               CALL AI
-            -------------------------------------------- */
-
-            const completion =
-
-                await client.chat.completions.create({
-
-                    model:
-                        "gpt-4o-mini",
-
-                    messages:
-
-                        messages,
-
-                    temperature:
-                        0.7,
-
-                    max_tokens:
-                        4000
-
-                });
-
-
-            /* --------------------------------------------
-               GET AI RESPONSE
-            -------------------------------------------- */
-
-            const reply =
-
-                completion
-                    .choices?.[0]
-                    ?.message
-                    ?.content
-                    ?.trim();
-
-
-            if (
-                !reply
-            ) {
-
-                throw new Error(
-                    "AI returned an empty response."
-                );
-
-            }
-
-
-            /* --------------------------------------------
-               RETURN RESPONSE
-            -------------------------------------------- */
-
-            return res.json({
-
-                success:
-                    true,
-
-                reply:
-                    reply,
-
-                mode:
-                    mode,
-
-                conversationId:
-                    conversationId ||
-                    null,
-
-                model:
-                    "gpt-4o-mini",
-
-                timestamp:
-                    new Date()
-                        .toISOString()
-
-            });
-
-
-        } catch (error) {
-
-            console.error(
-
-                "ARUZHAN AI ERROR:",
-
-                error
-
-            );
-
-
-            /* --------------------------------------------
-               ERROR RESPONSE
-            -------------------------------------------- */
-
-            return res.status(
-
-                500
-
-            ).json({
-
-                success:
-                    false,
-
-                error:
-                    "AI серверінде қате пайда болды.",
-
-                details:
-
-                    process.env.NODE_ENV ===
-                    "development"
-
-                        ? error.message
-
-                        : undefined
-
-            });
-
-        }
-
-    }
-
-);
-
-
-/* ============================================================
-   9. STREAMING CHAT ENDPOINT
-   ============================================================ */
-
-app.post(
-
-    "/api/chat/stream",
-
-    async (req, res) => {
-
-        try {
-
-            const {
-
-                message,
-
-                mode =
-                    "companion",
-
-                history =
-                    []
-
-            } = req.body;
-
-
-            if (
-                !message
-            ) {
-
-                return res.status(
-                    400
-                ).json({
-
-                    error:
-                        "Message is required."
-
-                });
-
-            }
-
-
-            const selectedMode =
-
-                AI_MODES[mode] ||
-
-                AI_MODES.companion;
-
-
-            const systemPrompt =
-
-                DEFAULT_SYSTEM_PROMPT +
-
-                "\n\n" +
-
-                selectedMode.instructions;
-
-
-            const messages = [
-
-                {
-
-                    role:
-                        "system",
-
-                    content:
-                        systemPrompt
-
-                }
-
-            ];
-
-
-            if (
-                Array.isArray(
-                    history
-                )
-            ) {
-
-                history
-                    .slice(-20)
-                    .forEach(
-
-                        item => {
-
-                            if (
-
-                                (
-                                    item.role ===
-                                        "user" ||
-
-                                    item.role ===
-                                        "assistant"
-
-                                ) &&
-
-                                typeof item.content ===
-                                    "string"
-
-                            ) {
-
-                                messages.push({
-
-                                    role:
-                                        item.role,
-
-                                    content:
-                                        item.content
-
-                                });
-
-                            }
-
-                        }
-
-                    );
-
-            }
-
-
-            messages.push({
-
-                role:
-                    "user",
-
-                content:
-                    message
-
-            });
-
-
-            const stream =
-
-                await client.chat.completions.create({
-
-                    model:
-                        "gpt-4o-mini",
-
-                    messages:
-                        messages,
-
-                    temperature:
-                        0.7,
-
-                    max_tokens:
-                        4000,
-
-                    stream:
-                        true
-
-                });
-
-
-            res.setHeader(
-
-                "Content-Type",
-
-                "text/event-stream"
-
-            );
-
-
-            res.setHeader(
-
-                "Cache-Control",
-
-                "no-cache"
-
-            );
-
-
-            res.setHeader(
-
-                "Connection",
-
-                "keep-alive"
-
-            );
-
-
-            for await (
-
-                const chunk of stream
-
-            ) {
-
-                const content =
-
-                    chunk
-                        .choices?.[0]
-                        ?.delta
-                        ?.content;
-
-
-                if (
-                    content
-                ) {
-
-                    res.write(
-
-                        `data: ${JSON.stringify({
-
-                            content:
-                                content
-
-                        })}\n\n`
-
-                    );
-
-                }
-
-            }
-
-
-            res.write(
-
-                "data: [DONE]\n\n"
-
-            );
-
-
-            res.end();
-
-
-        } catch (error) {
-
-            console.error(
-
-                "STREAM ERROR:",
-
-                error
-
-            );
-
-
-            if (
-                !res.headersSent
-            ) {
-
-                res.status(
-                    500
-                ).json({
-
-                    error:
-                        "Streaming error."
-
-                });
-
-            } else {
-
-                res.end();
-
-            }
-
-        }
-
-    }
-
-);
-
-
-/* ============================================================
-   10. AI MODE LIST
-   ============================================================ */
-
-app.get(
-
-    "/api/modes",
-
-    (req, res) => {
-
-        const modes =
-
-            Object.entries(
-                AI_MODES
-            ).map(
-
-                ([id, mode]) => ({
-
-                    id:
-                        id,
-
-                    name:
-                        mode.name
-
-                })
-
-            );
-
-
-        res.json({
-
-            success:
-                true,
-
-            modes:
-                modes
-
-        });
-
-    }
-
-);
-
-
-/* ============================================================
-   11. FALLBACK FRONTEND ROUTE
-   ============================================================ */
-
-app.get(
-
-    "*",
-
-    (req, res) => {
-
-        res.sendFile(
-
-            path.join(
-
-                __dirname,
-
-                "public",
-
-                "index.html"
-
-            )
-
+        console.error(
+            "ARUZHAN AI ERROR:",
+            error
         );
 
+
+        return res.status(500).json({
+
+            success: false,
+
+            error:
+                "ARUZHAN AI серверінде қате пайда болды."
+
+        });
+
     }
 
-);
+});
 
+// ============================================================
+// 404
+// ============================================================
 
-/* ============================================================
-   12. ERROR HANDLER
-   ============================================================ */
+app.use((req, res) => {
+
+    res.status(404).json({
+
+        success: false,
+
+        error: "API route not found."
+
+    });
+
+});
+
+// ============================================================
+// ERROR HANDLER
+// ============================================================
 
 app.use(
-
     (
         error,
         req,
@@ -924,124 +491,52 @@ app.use(
     ) => {
 
         console.error(
+            "SERVER ERROR:",
             error
         );
 
+        res.status(500).json({
 
-        res.status(
+            success: false,
 
-            error.status ||
-            500
-
-        ).json({
-
-            success:
-                false,
-
-            error:
-                "Internal server error."
+            error: "Internal server error."
 
         });
 
     }
-
 );
 
-
-/* ============================================================
-   13. START SERVER
-   ============================================================ */
+// ============================================================
+// START SERVER
+// ============================================================
 
 app.listen(
-
     PORT,
-
-    HOST,
-
     () => {
 
         console.log(
-
             "===================================="
-
         );
 
         console.log(
-
-            "      ARUZHAN AI SERVER ONLINE"
-
+            "       ARUZHAN AI SERVER"
         );
 
         console.log(
-
             "===================================="
-
         );
 
         console.log(
-
-            `Server:
-            http://localhost:${PORT}`
-
+            `Server running on port ${PORT}`
         );
 
         console.log(
-
-            `AI:
-            ${process.env.OPENAI_API_KEY
-                ? "API KEY CONNECTED"
-                : "API KEY NOT FOUND"}`
-
+            "AI backend is ready."
         );
 
         console.log(
-
             "===================================="
-
         );
 
     }
-
-);
-
-
-/* ============================================================
-   14. PROCESS ERROR HANDLING
-   ============================================================ */
-
-process.on(
-
-    "unhandledRejection",
-
-    error => {
-
-        console.error(
-
-            "Unhandled Rejection:",
-
-            error
-
-        );
-
-    }
-
-);
-
-
-process.on(
-
-    "uncaughtException",
-
-    error => {
-
-        console.error(
-
-            "Uncaught Exception:",
-
-            error
-
-        );
-
-    }
-
 );
