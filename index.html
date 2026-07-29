@@ -2,988 +2,221 @@
 <html lang="kk">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="ARUZHAN AI — заманауи жасанды интеллект көмекшісі"
-    >
-
-    <meta
-        name="theme-color"
-        content="#09090f"
-    >
-
-    <title>
-        ARUZHAN AI
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ARUZHAN AI — заманауи жасанды интеллект көмекшісі">
+    <meta name="theme-color" content="#09090f">
+    <title>ARUZHAN AI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
-
-    <!-- =====================================================
-         APP
-    ====================================================== -->
-
-    <div
-        class="app"
-        id="app"
-    >
-
-
-        <!-- =================================================
-             SIDEBAR
-        ================================================== -->
-
-        <aside
-            class="sidebar"
-            id="sidebar"
-        >
-
-            <!-- LOGO -->
-
-            <div
-                class="brand"
-            >
-
-                <div
-                    class="brand-logo"
-                >
-                    AI
+    <div class="app" id="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-logo">AI</div>
+                <div class="brand-info">
+                    <h1>ARUZHAN AI</h1>
+                    <span>Intelligent Assistant</span>
                 </div>
-
-                <div
-                    class="brand-info"
-                >
-
-                    <h1>
-                        ARUZHAN AI
-                    </h1>
-
-                    <span>
-                        Intelligent Assistant
-                    </span>
-
-                </div>
-
             </div>
 
-
-            <!-- NEW CHAT -->
-
-            <button
-                class="new-chat-button"
-                id="newChatButton"
-                type="button"
-                onclick="window.ARUZHAN_AI?.clearChat()"
-            >
-
-                <span>
-                    +
-                </span>
-
-                Жаңа чат
-
+            <button class="new-chat-button" id="newChatButton" type="button" onclick="window.ARUZHAN_AI?.clearChat()">
+                <span>+</span> Жаңа чат
             </button>
 
+            <div class="sidebar-section">
+                <div class="sidebar-title">AI MODE</div>
+                <div class="mode-list">
+                    <button class="mode-button active" type="button" data-mode="companion" onclick="selectMode('companion')">
+                        <span class="mode-icon">🤍</span>
+                        <span class="mode-text">
+                            <strong>Companion</strong>
+                            <small>Natural conversation</small>
+                        </span>
+                    </button>
 
-            <!-- AI MODES -->
+                    <button class="mode-button" type="button" data-mode="smart" onclick="selectMode('smart')">
+                        <span class="mode-icon">🧠</span>
+                        <span class="mode-text">
+                            <strong>Smart AI</strong>
+                            <small>Universal assistant</small>
+                        </span>
+                    </button>
 
-            <div
-                class="sidebar-section"
-            >
+                    <button class="mode-button" type="button" data-mode="study" onclick="selectMode('study')">
+                        <span class="mode-icon">📚</span>
+                        <span class="mode-text">
+                            <strong>Study</strong>
+                            <small>Learn and understand</small>
+                        </span>
+                    </button>
 
-                <div
-                    class="sidebar-title"
-                >
-                    AI MODE
+                    <button class="mode-button" type="button" data-mode="developer" onclick="selectMode('developer')">
+                        <span class="mode-icon">💻</span>
+                        <span class="mode-text">
+                            <strong>Developer</strong>
+                            <small>Code and technology</small>
+                        </span>
+                    </button>
+
+                    <button class="mode-button" type="button" data-mode="motivation" onclick="selectMode('motivation')">
+                        <span class="mode-icon">🚀</span>
+                        <span class="mode-text">
+                            <strong>Motivation</strong>
+                            <small>Goals and productivity</small>
+                        </span>
+                    </button>
                 </div>
-
-
-                <div
-                    class="mode-list"
-                >
-
-
-                    <!-- COMPANION -->
-
-                    <button
-                        class="mode-button active"
-                        type="button"
-                        data-mode="companion"
-                        onclick="selectMode('companion')"
-                    >
-
-                        <span
-                            class="mode-icon"
-                        >
-                            🤍
-                        </span>
-
-                        <span
-                            class="mode-text"
-                        >
-
-                            <strong>
-                                Companion
-                            </strong>
-
-                            <small>
-                                Natural conversation
-                            </small>
-
-                        </span>
-
-                    </button>
-
-
-                    <!-- SMART -->
-
-                    <button
-                        class="mode-button"
-                        type="button"
-                        data-mode="smart"
-                        onclick="selectMode('smart')"
-                    >
-
-                        <span
-                            class="mode-icon"
-                        >
-                            🧠
-                        </span>
-
-                        <span
-                            class="mode-text"
-                        >
-
-                            <strong>
-                                Smart AI
-                            </strong>
-
-                            <small>
-                                Universal assistant
-                            </small>
-
-                        </span>
-
-                    </button>
-
-
-                    <!-- STUDY -->
-
-                    <button
-                        class="mode-button"
-                        type="button"
-                        data-mode="study"
-                        onclick="selectMode('study')"
-                    >
-
-                        <span
-                            class="mode-icon"
-                        >
-                            📚
-                        </span>
-
-                        <span
-                            class="mode-text"
-                        >
-
-                            <strong>
-                                Study
-                            </strong>
-
-                            <small>
-                                Learn and understand
-                            </small>
-
-                        </span>
-
-                    </button>
-
-
-                    <!-- DEVELOPER -->
-
-                    <button
-                        class="mode-button"
-                        type="button"
-                        data-mode="developer"
-                        onclick="selectMode('developer')"
-                    >
-
-                        <span
-                            class="mode-icon"
-                        >
-                            💻
-                        </span>
-
-                        <span
-                            class="mode-text"
-                        >
-
-                            <strong>
-                                Developer
-                            </strong>
-
-                            <small>
-                                Code and technology
-                            </small>
-
-                        </span>
-
-                    </button>
-
-
-                    <!-- MOTIVATION -->
-
-                    <button
-                        class="mode-button"
-                        type="button"
-                        data-mode="motivation"
-                        onclick="selectMode('motivation')"
-                    >
-
-                        <span
-                            class="mode-icon"
-                        >
-                            🚀
-                        </span>
-
-                        <span
-                            class="mode-text"
-                        >
-
-                            <strong>
-                                Motivation
-                            </strong>
-
-                            <small>
-                                Goals and productivity
-                            </small>
-
-                        </span>
-
-                    </button>
-
-                </div>
-
             </div>
 
-
-            <!-- STATUS -->
-
-            <div
-                class="sidebar-status"
-            >
-
-                <span
-                    class="status-dot"
-                    id="statusDot"
-                ></span>
-
-                <span
-                    id="statusText"
-                >
-                    AI Ready
-                </span>
-
+            <div class="sidebar-status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">AI Ready</span>
             </div>
 
-
-            <!-- SIDEBAR FOOTER -->
-
-            <div
-                class="sidebar-footer"
-            >
-
-                <span>
-                    ARUZHAN AI
-                </span>
-
-                <span>
-                    v1.0
-                </span>
-
+            <div class="sidebar-footer">
+                <span>ARUZHAN AI</span>
+                <span>v1.0</span>
             </div>
-
         </aside>
 
-
-        <!-- =================================================
-             MAIN AREA
-        ================================================== -->
-
-        <main
-            class="main"
-        >
-
-
-            <!-- =================================================
-                 HEADER
-            ================================================== -->
-
-            <header
-                class="topbar"
-            >
-
-                <div
-                    class="topbar-left"
-                >
-
-                    <!-- MOBILE MENU -->
-
-                    <button
-                        class="icon-button mobile-menu-button"
-                        id="mobileMenuButton"
-                        type="button"
-                        aria-label="Open menu"
-                        onclick="toggleSidebar()"
-                    >
-
+        <!-- MAIN AREA -->
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="icon-button mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open menu" onclick="toggleSidebar()">
                         ☰
-
                     </button>
-
-
-                    <!-- AI INFO -->
-
-                    <div
-                        class="ai-header-info"
-                    >
-
-                        <div
-                            class="ai-avatar"
-                        >
-                            AI
-                        </div>
-
+                    <div class="ai-header-info">
+                        <div class="ai-avatar">AI</div>
                         <div>
-
-                            <h2>
-                                ARUZHAN AI
-                            </h2>
-
-                            <span
-                                class="online-status"
-                            >
-
-                                <span
-                                    class="online-dot"
-                                ></span>
-
-                                Online
-
+                            <h2>ARUZHAN AI</h2>
+                            <span class="online-status">
+                                <span class="online-dot"></span> Online
                             </span>
-
                         </div>
-
                     </div>
-
                 </div>
 
-
-                <div
-                    class="topbar-right"
-                >
-
-                    <!-- CURRENT MODE -->
-
-                    <div
-                        class="current-mode"
-                        id="currentModeLabel"
-                    >
-                        Companion
-                    </div>
-
-
-                    <!-- CLEAR CHAT -->
-
-                    <button
-                        class="icon-button"
-                        id="clearChat"
-                        type="button"
-                        aria-label="Clear chat"
-                        title="Clear chat"
-                    >
-
+                <div class="topbar-right">
+                    <div class="current-mode" id="currentModeLabel">Companion</div>
+                    <button class="icon-button" id="clearChat" type="button" aria-label="Clear chat" title="Clear chat">
                         🗑
-
                     </button>
-
                 </div>
-
             </header>
 
-
-            <!-- =================================================
-                 CHAT AREA
-            ================================================== -->
-
-            <section
-                class="chat-wrapper"
-            >
-
-                <div
-                    class="chat-messages"
-                    id="chatMessages"
-                >
-
-                    <!--
-                        Messages are inserted here
-                        by app.js
-                    -->
-
+            <section class="chat-wrapper">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Хабарламалар app.js арқылы осы жерге қосылады -->
                 </div>
 
-
-                <!-- =================================================
-                     TYPING INDICATOR
-                ================================================== -->
-
-                <div
-                    class="typing-indicator"
-                    id="typingIndicator"
-                    style="display: none;"
-                >
-
-                    <div
-                        class="typing-avatar"
-                    >
-                        AI
-                    </div>
-
-                    <div
-                        class="typing-content"
-                    >
-
-                        <span>
-                            ARUZHAN AI is thinking
-                        </span>
-
-                        <div
-                            class="typing-dots"
-                        >
-
-                            <span></span>
-                            <span></span>
-                            <span></span>
-
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-avatar">AI</div>
+                    <div class="typing-content">
+                        <span>ARUZHAN AI is thinking</span>
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
                         </div>
-
                     </div>
-
                 </div>
-
             </section>
 
-
-            <!-- =================================================
-                 INPUT AREA
-            ================================================== -->
-
-            <footer
-                class="input-area"
-            >
-
-                <div
-                    class="input-container"
-                >
-
-
-                    <!-- ATTACHMENT -->
-
-                    <button
-                        class="input-action"
-                        type="button"
-                        title="Attach file"
-                        onclick="handleAttachment()"
-                    >
-
+            <footer class="input-area">
+                <div class="input-container">
+                    <button class="input-action" type="button" title="Attach file" onclick="handleAttachment()">
                         📎
-
                     </button>
-
-
-                    <!-- TEXT INPUT -->
-
-                    <textarea
-                        id="messageInput"
-                        class="message-input"
-                        placeholder="ARUZHAN AI-ға сұрағыңды жаз..."
-                        rows="1"
-                        autocomplete="off"
-                    ></textarea>
-
-
-                    <!-- SEND -->
-
-                    <button
-                        id="sendButton"
-                        class="send-button"
-                        type="button"
-                        title="Send message"
-                    >
-
-                        <span>
-                            ➤
-                        </span>
-
+                    <textarea id="messageInput" class="message-input" placeholder="ARUZHAN AI-ға сұрағыңды жаз..." rows="1" autocomplete="off"></textarea>
+                    <button id="sendButton" class="send-button" type="button" title="Send message">
+                        <span>➤</span>
                     </button>
-
                 </div>
 
-
-                <!-- INPUT HINT -->
-
-                <div
-                    class="input-hint"
-                >
-
-                    <span>
-                        Enter — жіберу
-                    </span>
-
-                    <span>
-                        Shift + Enter — жаңа жол
-                    </span>
-
+                <div class="input-hint">
+                    <span>Enter — жіберу</span>
+                    <span>Shift + Enter — жаңа жол</span>
                 </div>
 
-
-                <!-- DISCLAIMER -->
-
-                <div
-                    class="ai-disclaimer"
-                >
-
-                    ARUZHAN AI қателесуі мүмкін.
-                    Маңызды ақпаратты тексеріп алыңыз.
-
+                <div class="ai-disclaimer">
+                    ARUZHAN AI қателесуі мүмкін. Маңызды ақпаратты тексеріп алыңыз.
                 </div>
-
             </footer>
-
         </main>
-
     </div>
 
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- =====================================================
-         MOBILE OVERLAY
-    ====================================================== -->
+    <input type="file" id="fileInput" hidden accept="image/*,.pdf,.txt,.doc,.docx">
 
-    <div
-        class="sidebar-overlay"
-        id="sidebarOverlay"
-        onclick="toggleSidebar()"
-    ></div>
-
-
-    <!-- =====================================================
-         HIDDEN FILE INPUT
-    ====================================================== -->
-
-    <input
-        type="file"
-        id="fileInput"
-        hidden
-        accept="image/*,.pdf,.txt,.doc,.docx"
-    >
-
-
-    <!-- =====================================================
-         APP.JS
-    ====================================================== -->
-
-    <script
-        src="app.js"
-    ></script>
-
-
-    <!-- =====================================================
-         EXTRA UI LOGIC
-    ====================================================== -->
+    <script src="app.js"></script>
 
     <script>
-
-        /* ==================================================
-           CURRENT MODE
-        ================================================== */
-
         function selectMode(mode) {
-
-            const buttons =
-                document.querySelectorAll(
-                    ".mode-button"
-                );
-
-
-            buttons.forEach(
-
-                button => {
-
-                    button.classList.remove(
-                        "active"
-                    );
-
-                }
-
-            );
-
-
-            const selectedButton =
-
-                document.querySelector(
-
-                    `[data-mode="${mode}"]`
-
-                );
-
-
-            if (
-                selectedButton
-            ) {
-
-                selectedButton.classList.add(
-                    "active"
-                );
-
-            }
-
-
-            /* ----------------------------------------------
-               UPDATE CURRENT MODE
-            ---------------------------------------------- */
+            document.querySelectorAll(".mode-button").forEach(b => b.classList.remove("active"));
+            const selectedButton = document.querySelector(`[data-mode="${mode}"]`);
+            if (selectedButton) selectedButton.classList.add("active");
 
             const modeNames = {
-
-                companion:
-                    "Companion",
-
-                smart:
-                    "Smart AI",
-
-                study:
-                    "Study",
-
-                developer:
-                    "Developer",
-
-                motivation:
-                    "Motivation"
-
+                companion: "Companion",
+                smart: "Smart AI",
+                study: "Study",
+                developer: "Developer",
+                motivation: "Motivation"
             };
 
+            const modeLabel = document.getElementById("currentModeLabel");
+            if (modeLabel) modeLabel.textContent = modeNames[mode] || "Companion";
 
-            const modeLabel =
-
-                document.getElementById(
-
-                    "currentModeLabel"
-
-                );
-
-
-            if (
-                modeLabel
-            ) {
-
-                modeLabel.textContent =
-
-                    modeNames[mode] ||
-
-                    "Companion";
-
+            if (window.ARUZHAN_AI) {
+                window.ARUZHAN_AI.setMode(mode);
             }
-
-
-            /* ----------------------------------------------
-               SEND MODE TO APP.JS
-            ---------------------------------------------- */
-
-            if (
-                window.ARUZHAN_AI
-            ) {
-
-                window.ARUZHAN_AI.setMode(
-                    mode
-                );
-
-            }
-
         }
-
-
-        /* ==================================================
-           MOBILE SIDEBAR
-        ================================================== */
 
         function toggleSidebar() {
-
-            const sidebar =
-
-                document.getElementById(
-                    "sidebar"
-                );
-
-
-            const overlay =
-
-                document.getElementById(
-                    "sidebarOverlay"
-                );
-
-
-            if (
-                sidebar
-            ) {
-
-                sidebar.classList.toggle(
-                    "open"
-                );
-
-            }
-
-
-            if (
-                overlay
-            ) {
-
-                overlay.classList.toggle(
-                    "active"
-                );
-
-            }
-
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("sidebarOverlay");
+            if (sidebar) sidebar.classList.toggle("open");
+            if (overlay) overlay.classList.toggle("active");
         }
-
-
-        /* ==================================================
-           FILE ATTACHMENT
-        ================================================== */
 
         function handleAttachment() {
-
-            const fileInput =
-
-                document.getElementById(
-                    "fileInput"
-                );
-
-
-            if (
-                fileInput
-            ) {
-
-                fileInput.click();
-
-            }
-
+            document.getElementById("fileInput")?.click();
         }
 
-
-        /* ==================================================
-           FILE SELECTED
-        ================================================== */
-
-        document
-            .getElementById(
-                "fileInput"
-            )
-            ?.addEventListener(
-
-                "change",
-
-                function () {
-
-                    const file =
-
-                        this.files?.[0];
-
-
-                    if (
-                        !file
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    console.log(
-
-                        "Selected file:",
-
-                        file.name
-
-                    );
-
-
-                    alert(
-
-                        `Файл таңдалды: ${file.name}`
-
-                    );
-
-                }
-
-            );
-
-
-        /* ==================================================
-           BACKEND STATUS
-        ================================================== */
+        document.getElementById("fileInput")?.addEventListener("change", function () {
+            const file = this.files?.[0];
+            if (!file) return;
+            alert(`Файл таңдалды: ${file.name}`);
+        });
 
         async function updateBackendStatus() {
-
-            const dot =
-
-                document.getElementById(
-                    "statusDot"
-                );
-
-
-            const text =
-
-                document.getElementById(
-                    "statusText"
-                );
-
+            const dot = document.getElementById("statusDot");
+            const text = document.getElementById("statusText");
 
             try {
-
-                if (
-                    !window.ARUZHAN_AI
-                ) {
-
-                    return;
-
-                }
-
-
-                await window.ARUZHAN_AI
-                    .checkBackend();
-
-
-                if (
-                    dot
-                ) {
-
-                    dot.classList.add(
-                        "online"
-                    );
-
-                }
-
-
-                if (
-                    text
-                ) {
-
-                    text.textContent =
-                        "AI Ready";
-
-                }
-
-            } catch (
-                error
-            ) {
-
-                if (
-                    dot
-                ) {
-
-                    dot.classList.remove(
-                        "online"
-                    );
-
-                }
-
-
-                if (
-                    text
-                ) {
-
-                    text.textContent =
-                        "Offline";
-
-                }
-
+                if (!window.ARUZHAN_AI) return;
+                await window.ARUZHAN_AI.checkBackend();
+                if (dot) dot.classList.add("online");
+                if (text) text.textContent = "AI Ready";
+            } catch (error) {
+                if (dot) dot.classList.remove("online");
+                if (text) text.textContent = "Offline";
             }
-
         }
 
+        document.querySelectorAll(".mode-button").forEach(button => {
+            button.addEventListener("click", () => {
+                if (window.innerWidth <= 768) toggleSidebar();
+            });
+        });
 
-        /* ==================================================
-           CLOSE MOBILE SIDEBAR ON MODE SELECT
-        ================================================== */
-
-        document
-            .querySelectorAll(
-                ".mode-button"
-            )
-            .forEach(
-
-                button => {
-
-                    button.addEventListener(
-
-                        "click",
-
-                        () => {
-
-                            if (
-                                window.innerWidth <=
-                                768
-                            ) {
-
-                                toggleSidebar();
-
-                            }
-
-                        }
-
-                    );
-
-                }
-
-            );
-
-
-        /* ==================================================
-           INITIALIZE
-        ================================================== */
-
-        document.addEventListener(
-
-            "DOMContentLoaded",
-
-            () => {
-
-                selectMode(
-                    "companion"
-                );
-
-                updateBackendStatus();
-
-            }
-
-        );
-
+        document.addEventListener("DOMContentLoaded", () => {
+            selectMode("companion");
+            updateBackendStatus();
+        });
     </script>
-
 </body>
-
 </html>
